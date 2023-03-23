@@ -1,6 +1,6 @@
 package com.dbs.dbs.utils;
 
-import com.dbs.dbs.models.*;
+import com.dbs.dbs.models.units.*;
 
 /**
  * UnitFactory returns new instances of Unit type.

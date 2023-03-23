@@ -1,6 +1,6 @@
 package com.dbs.dbs.services;
 
-import com.dbs.dbs.models.*;
+import com.dbs.dbs.models.units.*;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
@@ -10,7 +10,6 @@ import java.util.HashMap;
 @Service
 public class UnitService {
     private final HashMap<Pair<Class<?>, Class<?>>, Double> counterFactor = new HashMap<>();
-    private final HashMap<Pair<Class<?>, Class<?>>, Double> terrainFactor = new HashMap<>();
 
     public UnitService() {
         counterFactor.put(new ImmutablePair<>(Pikeman.class, Knight.class), 1.5);
