@@ -1,6 +1,9 @@
 package com.dbs.dbs;
 
-import com.dbs.dbs.models.*;
+import com.dbs.dbs.models.units.Archer;
+import com.dbs.dbs.models.units.Footman;
+import com.dbs.dbs.models.units.Knight;
+import com.dbs.dbs.models.units.Pikeman;
 import com.dbs.dbs.services.UnitService;
 import org.junit.jupiter.api.Test;
 
