@@ -1,4 +1,4 @@
-package com.dbs.dbs.models;
+package com.dbs.dbs.models.units;
 
 /**
  * Class that represents Footman unit.

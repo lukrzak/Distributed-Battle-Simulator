@@ -1,4 +1,4 @@
-package com.dbs.dbs.models;
+package com.dbs.dbs.models.units;
 
 import lombok.Data;
 
