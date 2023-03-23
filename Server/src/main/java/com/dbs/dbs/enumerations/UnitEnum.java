@@ -1,4 +1,4 @@
-package com.dbs.dbs.utils;
+package com.dbs.dbs.enumerations;
 
 /**
  * UnitEnum contains all types of units in game.
