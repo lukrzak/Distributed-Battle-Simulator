@@ -2,6 +2,10 @@ package com.dbs.dbs.models;
 
 import lombok.Data;
 
+/**
+ * Base of every unit in game.
+ * Must be extended in order to work.
+ */
 @Data
 public abstract class Unit {
     private String name;
