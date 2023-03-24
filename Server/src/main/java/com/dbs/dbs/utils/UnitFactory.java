@@ -5,7 +5,7 @@ import com.dbs.dbs.models.units.*;
 
 /**
  * UnitFactory returns new instances of Unit type.
- * Desired unit must be passed as parameter of UnitEnum type in static createUnit() method.
+ * Desired unit must be passed as parameter of UnitEnum type in static createUnit(UnitEnum type) method.
  */
 public class UnitFactory {
 
