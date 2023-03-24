@@ -6,6 +6,6 @@ package com.dbs.dbs.models.units;
 public class Pikeman extends Unit{
 
     public Pikeman() {
-        super("Pikeman", 10, 5, 15, 130, 100);
+        super("Pikeman", 10.0, 5.0, 15.0, 130.0, 100);
     }
 }

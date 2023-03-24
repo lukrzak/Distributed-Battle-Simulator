@@ -9,13 +9,13 @@ import lombok.Data;
 @Data
 public abstract class Unit {
     private String name;
-    private Integer range;
-    private Integer speed;
-    private Integer damage;
-    private Integer health;
+    private Double range;
+    private Double speed;
+    private Double damage;
+    private Double health;
     private Integer cost;
 
-    public Unit(String name, Integer range, Integer speed, Integer damage, Integer health, Integer cost) {
+    public Unit(String name, Double range, Double speed, Double damage, Double health, Integer cost) {
         this.name = name;
         this.range = range;
         this.speed = speed;
@@ -24,8 +24,4 @@ public abstract class Unit {
         this.cost = cost;
     }
 
-    // Terrain factor
-    // Attack method
-    // Counter factor
-    // Special ability
 }

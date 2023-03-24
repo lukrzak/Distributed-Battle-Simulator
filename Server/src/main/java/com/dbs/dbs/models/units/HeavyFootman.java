@@ -6,6 +6,6 @@ package com.dbs.dbs.models.units;
 public class HeavyFootman extends Unit{
 
     public HeavyFootman() {
-        super("Heavy Footman", 4, 4, 20, 150, 125);
+        super("Heavy Footman", 4.0, 4.0, 20.0, 150.0, 125);
     }
 }

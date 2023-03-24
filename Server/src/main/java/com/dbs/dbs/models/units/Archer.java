@@ -6,6 +6,6 @@ package com.dbs.dbs.models.units;
 public class Archer extends Unit{
 
     public Archer() {
-        super("Archer", 40, 5, 6, 50, 75);
+        super("Archer", 40.0, 5.0, 6.0, 50.0, 75);
     }
 }
