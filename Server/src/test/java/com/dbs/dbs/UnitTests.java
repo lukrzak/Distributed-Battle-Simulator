@@ -1,19 +1,22 @@
 package com.dbs.dbs;
 
 import com.dbs.dbs.enumerations.UnitEnum;
-import com.dbs.dbs.models.terrains.Swamp;
 import com.dbs.dbs.models.units.*;
 import com.dbs.dbs.services.UnitService;
 import com.dbs.dbs.utils.UnitFactory;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 public class UnitTests {
 
     UnitService unitService = new UnitService();
 
     @Test
+    @DisplayName("Counter factor calculation")
     void getCounterFactorTest(){
         assertEquals(unitService.getCounterFactor(Pikeman.class, Knight.class), 1.5);
         assertNotEquals(unitService.getCounterFactor(Archer.class, Footman.class), 1.2);
@@ -21,18 +24,20 @@ public class UnitTests {
     }
 
     @Test
+    @DisplayName("Creation units from UnitFactory")
     void unitFactoryTest(){
-        assertTrue(UnitFactory.createUnit(UnitEnum.ARCHER) instanceof Archer);
-        assertTrue(UnitFactory.createUnit(UnitEnum.KNIGHT) instanceof Unit);
-        assertNotNull(UnitFactory.createUnit(UnitEnum.FOOTMAN));
-        assertNotNull(UnitFactory.createUnit(UnitEnum.PIKEMAN));
+        assertTrue(UnitFactory.createUnit(UnitEnum.ARCHER, 0, 0) instanceof Archer);
+        assertTrue(UnitFactory.createUnit(UnitEnum.KNIGHT, 0, 0) instanceof Unit);
+        assertNotNull(UnitFactory.createUnit(UnitEnum.FOOTMAN,  0, 0));
+        assertNotNull(UnitFactory.createUnit(UnitEnum.PIKEMAN,  0, 0));
     }
 
     @Test
+    @DisplayName("Testing units health after attack")
     void attackTest(){
-        Unit knight = new Knight();
-        Unit pikeman = new Pikeman();
-        Unit footman = new Footman();
+        Unit knight = new Knight(0,0);
+        Unit pikeman = new Pikeman(0,0);
+        Unit footman = new Footman(0,0);
         double knightMaxHealth = knight.getHealth();
         double pikemanMaxHealth = pikeman.getHealth();
         unitService.attack(pikeman, knight);

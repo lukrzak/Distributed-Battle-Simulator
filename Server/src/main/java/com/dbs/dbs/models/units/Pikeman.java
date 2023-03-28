@@ -5,7 +5,7 @@ package com.dbs.dbs.models.units;
  */
 public class Pikeman extends Unit{
 
-    public Pikeman() {
-        super("Pikeman", 10.0, 5.0, 15.0, 130.0, 100);
+    public Pikeman(Integer posX, Integer posY) {
+        super("Pikeman", 10.0, 5.0, 15.0, 130.0, 100, posX, posY);
     }
 }
