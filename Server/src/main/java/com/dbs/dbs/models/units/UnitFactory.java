@@ -1,4 +1,4 @@
-package com.dbs.dbs.utils;
+package com.dbs.dbs.models.units;
 
 import com.dbs.dbs.enumerations.UnitEnum;
 import com.dbs.dbs.models.units.*;
