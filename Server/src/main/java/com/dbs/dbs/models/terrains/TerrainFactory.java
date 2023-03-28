@@ -1,4 +1,4 @@
-package com.dbs.dbs.utils;
+package com.dbs.dbs.models.terrains;
 
 import com.dbs.dbs.enumerations.TerrainEnum;
 import com.dbs.dbs.models.terrains.*;

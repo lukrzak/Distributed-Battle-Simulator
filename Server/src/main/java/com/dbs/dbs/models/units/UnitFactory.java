@@ -1,4 +1,4 @@
-package com.dbs.dbs.utils;
+package com.dbs.dbs.models.units;
 
 import com.dbs.dbs.enumerations.UnitEnum;
 import com.dbs.dbs.models.units.*;
@@ -14,13 +14,13 @@ public class UnitFactory {
      * @param type definied by UnitEnum
      * @return new instance of Unit type
      */
-    public static Unit createUnit(UnitEnum type){
+    public static Unit createUnit(UnitEnum type, Integer posX, Integer posY){
         return switch (type) {
-            case ARCHER -> new Archer();
-            case FOOTMAN -> new Footman();
-            case HEAVY_FOOTMAN -> new HeavyFootman();
-            case KNIGHT -> new Knight();
-            case PIKEMAN -> new Pikeman();
+            case ARCHER -> new Archer(posX, posY);
+            case FOOTMAN -> new Footman(posX, posY);
+            case HEAVY_FOOTMAN -> new HeavyFootman(posX, posY);
+            case KNIGHT -> new Knight(posX, posY);
+            case PIKEMAN -> new Pikeman(posX, posY);
         };
     }
 }
