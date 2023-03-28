@@ -3,7 +3,7 @@ package com.dbs.dbs;
 import com.dbs.dbs.enumerations.UnitEnum;
 import com.dbs.dbs.models.units.*;
 import com.dbs.dbs.services.UnitService;
-import com.dbs.dbs.utils.UnitFactory;
+import com.dbs.dbs.models.units.UnitFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
