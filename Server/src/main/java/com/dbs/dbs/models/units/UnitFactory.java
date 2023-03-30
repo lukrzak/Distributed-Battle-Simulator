@@ -14,7 +14,7 @@ public class UnitFactory {
      * @param type definied by UnitEnum
      * @return new instance of Unit type
      */
-    public static Unit createUnit(UnitEnum type, Integer posX, Integer posY){
+    public static Unit createUnit(UnitEnum type, Double posX, Double posY){
         return switch (type) {
             case ARCHER -> new Archer(posX, posY);
             case FOOTMAN -> new Footman(posX, posY);

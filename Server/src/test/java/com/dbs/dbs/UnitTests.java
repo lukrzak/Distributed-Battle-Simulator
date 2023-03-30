@@ -35,9 +35,9 @@ public class UnitTests {
     @Test
     @DisplayName("Testing units health after attack")
     void attackTest(){
-        Unit knight = new Knight(0,0);
-        Unit pikeman = new Pikeman(0,0);
-        Unit footman = new Footman(0,0);
+        Unit knight = new Knight(0.0,0.0);
+        Unit pikeman = new Pikeman(0.0,0.0);
+        Unit footman = new Footman(0.0,0.0);
         double knightMaxHealth = knight.getHealth();
         double pikemanMaxHealth = pikeman.getHealth();
         unitService.attack(pikeman, knight);

@@ -5,7 +5,7 @@ package com.dbs.dbs.models.units;
  */
 public class HeavyFootman extends Unit{
 
-    public HeavyFootman(Integer posX, Integer posY) {
+    public HeavyFootman(Double posX, Double posY) {
         super("Heavy Footman", 4.0, 4.0, 20.0, 150.0, 125, posX, posY);
     }
 }

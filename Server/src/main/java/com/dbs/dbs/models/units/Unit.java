@@ -14,10 +14,10 @@ public abstract class Unit {
     private Double damage;
     private Double health;
     private Integer cost;
-    private Integer positionX;
-    private Integer positionY;
+    private Double positionX;
+    private Double positionY;
 
-    public Unit(String name, Double range, Double speed, Double damage, Double health, Integer cost, Integer positionX, Integer positionY) {
+    public Unit(String name, Double range, Double speed, Double damage, Double health, Integer cost, Double positionX, Double positionY) {
         this.name = name;
         this.range = range;
         this.speed = speed;
