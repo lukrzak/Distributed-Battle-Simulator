@@ -26,10 +26,10 @@ public class UnitTests {
     @Test
     @DisplayName("Creation units from UnitFactory")
     void unitFactoryTest(){
-        assertTrue(UnitFactory.createUnit(UnitEnum.ARCHER, 0, 0) instanceof Archer);
-        assertTrue(UnitFactory.createUnit(UnitEnum.KNIGHT, 0, 0) instanceof Unit);
-        assertNotNull(UnitFactory.createUnit(UnitEnum.FOOTMAN,  0, 0));
-        assertNotNull(UnitFactory.createUnit(UnitEnum.PIKEMAN,  0, 0));
+        assertTrue(UnitFactory.createUnit(UnitEnum.ARCHER, 0.0, 0.0) instanceof Archer);
+        assertTrue(UnitFactory.createUnit(UnitEnum.KNIGHT, 0.0, 0.0) instanceof Unit);
+        assertNotNull(UnitFactory.createUnit(UnitEnum.FOOTMAN,  0.0, 0.0));
+        assertNotNull(UnitFactory.createUnit(UnitEnum.PIKEMAN,  0.0, 0.0));
     }
 
     @Test
