@@ -1,7 +1,6 @@
 package com.dbs.dbs.models.units;
 
 import com.dbs.dbs.enumerations.UnitEnum;
-import com.dbs.dbs.models.units.*;
 
 /**
  * UnitFactory returns new instances of Unit type.
@@ -11,7 +10,7 @@ public class UnitFactory {
 
     /**
      * Returns new instance of Unit type object.
-     * @param type definied by UnitEnum
+     * @param type defined by UnitEnum
      * @return new instance of Unit type
      */
     public static Unit createUnit(UnitEnum type, Double posX, Double posY){

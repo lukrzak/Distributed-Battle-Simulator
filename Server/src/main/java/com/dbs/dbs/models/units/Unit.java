@@ -4,7 +4,7 @@ import lombok.Data;
 
 /**
  * Base of every unit in game.
- * Must be extended in order to work.
+ * All unit types must extend this class in order to work.
  */
 @Data
 public abstract class Unit {
