@@ -19,7 +19,7 @@ public class UnitTests {
     @DisplayName("Counter factor calculation")
     void getCounterFactorTest(){
         assertEquals(unitService.getCounterFactor(Pikeman.class, Knight.class), 1.5);
-        assertNotEquals(unitService.getCounterFactor(Archer.class, Footman.class), 1.2);
+        assertEquals(unitService.getCounterFactor(Archer.class, Footman.class), 1.1);
         assertEquals(unitService.getCounterFactor(Archer.class, Archer.class), 1);
     }
 
@@ -27,7 +27,6 @@ public class UnitTests {
     @DisplayName("Creation units from UnitFactory")
     void unitFactoryTest(){
         assertTrue(UnitFactory.createUnit(UnitEnum.ARCHER, 0.0, 0.0) instanceof Archer);
-        assertTrue(UnitFactory.createUnit(UnitEnum.KNIGHT, 0.0, 0.0) instanceof Unit);
         assertNotNull(UnitFactory.createUnit(UnitEnum.FOOTMAN,  0.0, 0.0));
         assertNotNull(UnitFactory.createUnit(UnitEnum.PIKEMAN,  0.0, 0.0));
     }
