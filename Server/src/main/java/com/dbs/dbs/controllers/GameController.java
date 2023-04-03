@@ -2,8 +2,12 @@ package com.dbs.dbs.controllers;
 
 import com.dbs.dbs.models.units.Unit;
 import com.dbs.dbs.services.GameService;
+import jakarta.websocket.OnMessage;
+import jakarta.websocket.OnOpen;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
 /**
@@ -29,9 +33,10 @@ public class GameController{
     /**
      * Method for connection test. After successful invocation, displays current time.
      */
-    @MessageMapping("/test")
-    public void test(){
-        System.out.println(java.time.LocalTime.now());
+    @OnMessage
+    public String handleTestMessage(@Payload String message) {
+        System.out.println("Received message: " + message);
+        return "Hello from server!";
     }
 
     /**
