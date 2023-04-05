@@ -1,8 +1,12 @@
 package com.dbs.dbs.services;
 
+import com.dbs.dbs.models.Game;
 import com.dbs.dbs.models.units.Unit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import static java.lang.Math.*;
 
@@ -11,8 +15,12 @@ public class GameService{
 
     @Autowired
     private final UnitService unitService;
-    public GameService(UnitService unitService) {
+    @Autowired
+    private final Game game;
+
+    public GameService(UnitService unitService, Game game) {
         this.unitService = unitService;
+        this.game = game;
     }
 
     public void moveUnit(Unit unit, Double newX, Double newY) throws InterruptedException {
@@ -58,4 +66,11 @@ public class GameService{
         System.out.println("Out of range");
     }
 
+
+    public Unit getUnitOfGivenId(Long id){
+        for (Unit unit: Stream.concat(game.getPlayerA().stream(), game.getPlayerB().stream()).toList()){
+            if (Objects.equals(unit.getId(), id)) return unit;
+        }
+        return null;
+    }
 }
