@@ -3,7 +3,6 @@ package com.dbs.dbs.controllers;
 import com.dbs.dbs.models.units.Unit;
 import com.dbs.dbs.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 
 /**
@@ -33,7 +32,6 @@ public class GameController{
      * @param posX X coordinate of destination.
      * @param posY Y coordinate of destination.
      */
-    @MessageMapping("/move")
     public void moveUnit(Long unitId, double posX, double posY){
         Unit unit = gameService.getUnitOfGivenId(unitId);
         Thread moveThread = new Thread(new Runnable() {
@@ -55,7 +53,6 @@ public class GameController{
      * @param attackerId ID of unit. This unit will deal damage toward defender.
      * @param defenderId ID of unit. This unit will receive dealt damage.
      */
-    @MessageMapping("/attack")
     public void attackUnit(Long attackerId, Long defenderId){
         Unit attacker = gameService.getUnitOfGivenId(attackerId);
         Unit defender = gameService.getUnitOfGivenId(defenderId);
