@@ -2,12 +2,8 @@ package com.dbs.dbs.controllers;
 
 import com.dbs.dbs.models.units.Unit;
 import com.dbs.dbs.services.GameService;
-import jakarta.websocket.OnMessage;
-import jakarta.websocket.OnOpen;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
 /**
@@ -23,6 +19,7 @@ public class GameController{
 
     /**
      * Constructor of GameController.
+     *
      * @param gameService Autowired GameService instance.
      */
     @Autowired
@@ -31,22 +28,14 @@ public class GameController{
     }
 
     /**
-     * Method for connection test. After successful invocation, displays current time.
-     */
-    @OnMessage
-    public String handleTestMessage(@Payload String message) {
-        System.out.println("Received message: " + message);
-        return "Hello from server!";
-    }
-
-    /**
      * moveUnit creates thread, where unit is moved towards point (posX, posY).
-     * @param unit Object of Unit type, that will be moved.
+     * @param unitId ID of unit, that will be moved.
      * @param posX X coordinate of destination.
      * @param posY Y coordinate of destination.
      */
     @MessageMapping("/move")
-    public void moveUnit(Unit unit, double posX, double posY){
+    public void moveUnit(Long unitId, double posX, double posY){
+        Unit unit = gameService.getUnitOfGivenId(unitId);
         Thread moveThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -63,11 +52,13 @@ public class GameController{
     /**
      * attackUnit is responsible for attacking unit in time intervals.
      * Method creates new Thread, that ends when defender is out of range.
-     * @param attacker Object of Unit type. This unit will deal damage toward defender.
-     * @param defender Object of Unit type. This unit will receive dealt damage.
+     * @param attackerId ID of unit. This unit will deal damage toward defender.
+     * @param defenderId ID of unit. This unit will receive dealt damage.
      */
     @MessageMapping("/attack")
-    public void attackUnit(Unit attacker, Unit defender){
+    public void attackUnit(Long attackerId, Long defenderId){
+        Unit attacker = gameService.getUnitOfGivenId(attackerId);
+        Unit defender = gameService.getUnitOfGivenId(defenderId);
         Thread attackThread = new Thread(new Runnable() {
             @Override
             public void run() {
