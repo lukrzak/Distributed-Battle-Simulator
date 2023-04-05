@@ -26,17 +26,17 @@ public class UnitTests {
     @Test
     @DisplayName("Creation units from UnitFactory")
     void unitFactoryTest(){
-        assertTrue(UnitFactory.createUnit(UnitEnum.ARCHER, 0.0, 0.0) instanceof Archer);
-        assertNotNull(UnitFactory.createUnit(UnitEnum.FOOTMAN,  0.0, 0.0));
-        assertNotNull(UnitFactory.createUnit(UnitEnum.PIKEMAN,  0.0, 0.0));
+        assertTrue(UnitFactory.createUnit(1L, UnitEnum.ARCHER, 0.0, 0.0) instanceof Archer);
+        assertNotNull(UnitFactory.createUnit(1L, UnitEnum.FOOTMAN,  0.0, 0.0));
+        assertNotNull(UnitFactory.createUnit(1L, UnitEnum.PIKEMAN,  0.0, 0.0));
     }
 
     @Test
     @DisplayName("Testing units health after attack")
     void attackTest(){
-        Unit knight = new Knight(0.0,0.0);
-        Unit pikeman = new Pikeman(0.0,0.0);
-        Unit footman = new Footman(0.0,0.0);
+        Unit knight = new Knight(1L,0.0,0.0);
+        Unit pikeman = new Pikeman(1L,0.0,0.0);
+        Unit footman = new Footman(1L,0.0,0.0);
         double knightMaxHealth = knight.getHealth();
         double pikemanMaxHealth = pikeman.getHealth();
         unitService.attack(pikeman, knight);

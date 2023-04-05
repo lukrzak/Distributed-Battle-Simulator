@@ -13,13 +13,13 @@ public class UnitFactory {
      * @param type defined by UnitEnum
      * @return new instance of Unit type
      */
-    public static Unit createUnit(UnitEnum type, Double posX, Double posY){
+    public static Unit createUnit(Long id, UnitEnum type, Double posX, Double posY){
         return switch (type) {
-            case ARCHER -> new Archer(posX, posY);
-            case FOOTMAN -> new Footman(posX, posY);
-            case HEAVY_FOOTMAN -> new HeavyFootman(posX, posY);
-            case KNIGHT -> new Knight(posX, posY);
-            case PIKEMAN -> new Pikeman(posX, posY);
+            case ARCHER -> new Archer(id, posX, posY);
+            case FOOTMAN -> new Footman(id, posX, posY);
+            case HEAVY_FOOTMAN -> new HeavyFootman(id, posX, posY);
+            case KNIGHT -> new Knight(id, posX, posY);
+            case PIKEMAN -> new Pikeman(id, posX, posY);
         };
     }
 }

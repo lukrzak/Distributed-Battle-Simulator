@@ -8,6 +8,7 @@ import lombok.Data;
  */
 @Data
 public abstract class Unit {
+    private Long id;
     private String name;
     private Double range;
     private Double speed;
@@ -17,7 +18,8 @@ public abstract class Unit {
     private Double positionX;
     private Double positionY;
 
-    public Unit(String name, Double range, Double speed, Double damage, Double health, Integer cost, Double positionX, Double positionY) {
+    public Unit(Long id, String name, Double range, Double speed, Double damage, Double health, Integer cost, Double positionX, Double positionY) {
+        this.id = id;
         this.name = name;
         this.range = range;
         this.speed = speed;
