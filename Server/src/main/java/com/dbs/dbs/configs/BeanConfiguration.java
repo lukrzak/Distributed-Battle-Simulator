@@ -17,4 +17,5 @@ public class BeanConfiguration {
     public static WebSocketHandler gameWebSocketHandler(){
         return new GameWebSocketHandler();
     }
+
 }
