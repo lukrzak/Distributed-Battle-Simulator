@@ -15,11 +15,11 @@ public class TerrainFactory {
      */
     public static Terrain createTerrain(TerrainEnum type){
         return switch (type){
-            case Forest -> new Forest();
-            case Lake -> new Lake();
-            case Mountain -> new Mountain();
-            case Plains -> new Plains();
-            case Swamp -> new Swamp();
+            case FOREST -> new Forest();
+            case LAKE -> new Lake();
+            case MOUNTAIN -> new Mountain();
+            case PLAINS -> new Plains();
+            case SWAMP -> new Swamp();
         };
     }
 
