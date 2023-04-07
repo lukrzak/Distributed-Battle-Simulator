@@ -28,11 +28,25 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public boolean authenticateUser(User user) throws Exception{
+    public User authenticateUser(User user) throws Exception{
         User existingUser = userRepository.findByUsernameOrMail(user.getUsername(), user.getMail());
         if (existingUser == null) throw new Exception("User with given username or login does not exist");
         if (!encoder.matches(existingUser.getPassword(), user.getPassword())) throw new Exception("Password incorrect");
-        return true;
+
+        return existingUser;
+    }
+
+    public void changePassword(User user, String newPassword) throws Exception {
+        User existingUser = userRepository.findByUsernameOrMail(user.getUsername(), user.getMail());
+        if (existingUser == null) throw new Exception("User with given username or login does not exist");
+        if (!encoder.matches(existingUser.getPassword(), user.getPassword())) throw new Exception("Password incorrect");
+
+        existingUser.setPassword(encoder.encode(newPassword));
+        userRepository.save(existingUser);
+    }
+
+    public void recoverPassword(String email){
+
     }
 
     @Bean

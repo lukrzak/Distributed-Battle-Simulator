@@ -25,13 +25,13 @@ public class UserController {
     }
 
     @PostMapping("/authenticate")
-    public boolean authenticateUser(@RequestBody User user) throws Exception {
+    public User authenticateUser(@RequestBody User user) throws Exception {
         return userService.authenticateUser(user);
     }
 
     @PostMapping("/password-change")
-    public void changePassword(@RequestBody User user){
-
+    public void changePassword(@RequestBody User user, @RequestBody String newPassword) throws Exception {
+        userService.changePassword(user, newPassword);
     }
 
     @PostMapping("/password-recovery")
