@@ -8,6 +8,7 @@ import com.dbs.dbs.models.units.*;
 import com.dbs.dbs.services.GameService;
 import com.dbs.dbs.services.UnitService;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static java.lang.Math.cos;
@@ -19,7 +20,7 @@ public class GameTests {
 
     Game game = new Game();
     GameService gameService = new GameService(new UnitService(), game);
-    GameController gameController = new GameController(gameService);
+    GameController gameController = new GameController(this.gameService);
 
     @Test
     void getMovingDirectionAngleTest(){
@@ -58,5 +59,23 @@ public class GameTests {
         gameController.moveUnit(attacker.getId(), 10.0, 10.0);
 
         Thread.sleep(10000);
+    }
+
+    @Test
+    void getUnitOfGivenIdTest() throws UnitDoesntExistException {
+        game.initializeUnits();
+        assertNotNull(gameService.getUnitOfGivenId(1L));
+        Long numberOfStartingUnits = Game.id;
+        assertNotNull(gameService.getUnitOfGivenId(numberOfStartingUnits - 1));
+        assertThrows(UnitDoesntExistException.class, () -> gameService.getUnitOfGivenId(numberOfStartingUnits));
+
+        try{
+            gameService.createUnit(UnitEnum.ARCHER, 10.0, 10.0, true);
+        }
+        catch(InterruptedException e){
+            System.out.println(e.getMessage());
+        }
+
+        assertNotNull(gameService.getUnitOfGivenId(numberOfStartingUnits));
     }
 }

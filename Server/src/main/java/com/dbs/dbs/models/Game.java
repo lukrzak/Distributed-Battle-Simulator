@@ -14,11 +14,10 @@ public class Game {
     public static Long id = 0L;
 
     public Game() {
-        initializeUnits();
 
     }
 
-    private void initializeUnits(){
+    public void initializeUnits(){
         playerA.add(UnitFactory.createUnit(UnitEnum.FOOTMAN, 1.0, 1.0));
         playerA.add(UnitFactory.createUnit(UnitEnum.FOOTMAN, 2.0, 2.0));
         playerA.add(UnitFactory.createUnit(UnitEnum.KNIGHT, 3.0, 3.0));
