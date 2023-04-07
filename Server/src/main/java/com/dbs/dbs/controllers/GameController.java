@@ -1,6 +1,10 @@
 package com.dbs.dbs.controllers;
 
+import com.dbs.dbs.enumerations.UnitEnum;
+import com.dbs.dbs.exceptions.UnitDoesntExistException;
+import com.dbs.dbs.models.Game;
 import com.dbs.dbs.models.units.Unit;
+import com.dbs.dbs.models.units.UnitFactory;
 import com.dbs.dbs.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,7 +36,7 @@ public class GameController{
      * @param posX X coordinate of destination.
      * @param posY Y coordinate of destination.
      */
-    public void moveUnit(Long unitId, double posX, double posY){
+    public void moveUnit(Long unitId, double posX, double posY) throws UnitDoesntExistException {
         Unit unit = gameService.getUnitOfGivenId(unitId);
         Thread moveThread = new Thread(new Runnable() {
             @Override
@@ -53,7 +57,7 @@ public class GameController{
      * @param attackerId ID of unit. This unit will deal damage toward defender.
      * @param defenderId ID of unit. This unit will receive dealt damage.
      */
-    public void attackUnit(Long attackerId, Long defenderId){
+    public void attackUnit(Long attackerId, Long defenderId) throws UnitDoesntExistException {
         Unit attacker = gameService.getUnitOfGivenId(attackerId);
         Unit defender = gameService.getUnitOfGivenId(defenderId);
         Thread attackThread = new Thread(new Runnable() {
@@ -67,5 +71,20 @@ public class GameController{
             }
         });
         attackThread.start();
+    }
+
+    public void createUnit(UnitEnum type, double posX, double posY, boolean player){
+        Unit unit = UnitFactory.createUnit(type, posX, posY);
+        Thread createUnitThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    gameService.createUnit(type, posX, posY, player);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        createUnitThread.start();
     }
 }
