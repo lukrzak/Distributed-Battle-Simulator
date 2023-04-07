@@ -20,12 +20,22 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public void registerUser(@RequestBody User user){
+    public void registerUser(@RequestBody User user) throws Exception {
         userService.registerUser(user);
     }
 
     @PostMapping("/authenticate")
-    public void authenticateUser(@RequestBody User user){
-        userService.authenticateUser(user);
+    public boolean authenticateUser(@RequestBody User user) throws Exception {
+        return userService.authenticateUser(user);
+    }
+
+    @PostMapping("/password-change")
+    public void changePassword(@RequestBody User user){
+
+    }
+
+    @PostMapping("/password-recovery")
+    public void recoverPassword(String email){
+
     }
 }
