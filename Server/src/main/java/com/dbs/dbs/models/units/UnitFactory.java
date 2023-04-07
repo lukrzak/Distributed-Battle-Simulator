@@ -1,6 +1,7 @@
 package com.dbs.dbs.models.units;
 
 import com.dbs.dbs.enumerations.UnitEnum;
+import com.dbs.dbs.models.Game;
 
 /**
  * UnitFactory returns new instances of Unit type.
@@ -13,13 +14,13 @@ public class UnitFactory {
      * @param type defined by UnitEnum
      * @return new instance of Unit type
      */
-    public static Unit createUnit(Long id, UnitEnum type, Double posX, Double posY){
+    public static Unit createUnit(UnitEnum type, Double posX, Double posY){
         return switch (type) {
-            case ARCHER -> new Archer(id, posX, posY);
-            case FOOTMAN -> new Footman(id, posX, posY);
-            case HEAVY_FOOTMAN -> new HeavyFootman(id, posX, posY);
-            case KNIGHT -> new Knight(id, posX, posY);
-            case PIKEMAN -> new Pikeman(id, posX, posY);
+            case ARCHER -> new Archer(Game.id++, posX, posY);
+            case FOOTMAN -> new Footman(Game.id++, posX, posY);
+            case HEAVY_FOOTMAN -> new HeavyFootman(Game.id++, posX, posY);
+            case KNIGHT -> new Knight(Game.id++, posX, posY);
+            case PIKEMAN -> new Pikeman(Game.id++, posX, posY);
         };
     }
 }

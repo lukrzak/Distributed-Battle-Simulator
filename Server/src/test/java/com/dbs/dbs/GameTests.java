@@ -2,6 +2,7 @@ package com.dbs.dbs;
 
 import com.dbs.dbs.controllers.GameController;
 import com.dbs.dbs.enumerations.UnitEnum;
+import com.dbs.dbs.exceptions.UnitDoesntExistException;
 import com.dbs.dbs.models.Game;
 import com.dbs.dbs.models.units.*;
 import com.dbs.dbs.services.GameService;
@@ -37,9 +38,9 @@ public class GameTests {
     }
 
     @Test
-    void attackAndRunSimulation() throws InterruptedException {
-        Unit attacker = UnitFactory.createUnit(1L, UnitEnum.FOOTMAN, 0.0, 0.0);
-        Unit defender = UnitFactory.createUnit(2L, UnitEnum.PIKEMAN, 0.0, 1.0);
+    void attackAndRunSimulation() throws InterruptedException, UnitDoesntExistException {
+        Unit attacker = UnitFactory.createUnit(UnitEnum.FOOTMAN, 0.0, 0.0);
+        Unit defender = UnitFactory.createUnit(UnitEnum.PIKEMAN, 0.0, 1.0);
 
         System.out.println(attacker.getName() + " initiated fight with " + defender.getName());
         System.out.println("--------------------");

@@ -1,7 +1,10 @@
 package com.dbs.dbs.services;
 
+import com.dbs.dbs.enumerations.UnitEnum;
+import com.dbs.dbs.exceptions.UnitDoesntExistException;
 import com.dbs.dbs.models.Game;
 import com.dbs.dbs.models.units.Unit;
+import com.dbs.dbs.models.units.UnitFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,10 +70,17 @@ public class GameService{
     }
 
 
-    public Unit getUnitOfGivenId(Long id){
+    public Unit getUnitOfGivenId(Long id) throws UnitDoesntExistException {
         for (Unit unit: Stream.concat(game.getPlayerA().stream(), game.getPlayerB().stream()).toList()){
             if (Objects.equals(unit.getId(), id)) return unit;
         }
-        return null;
+        throw new UnitDoesntExistException();
+    }
+
+    public void createUnit(UnitEnum type, double posX, double posY, boolean player) throws InterruptedException {
+        Thread.sleep(2500);
+        Unit newUnit = UnitFactory.createUnit(type, posX, posY);
+        if(player) game.getPlayerA().add(newUnit);
+        else game.getPlayerB().add(newUnit);
     }
 }
