@@ -62,7 +62,7 @@ public class UserService {
     public void changePassword(User user, String newPassword) throws Exception {
         User existingUser = userRepository.findByUsernameOrMail(user.getUsername(), user.getMail());
         if (existingUser == null) throw new Exception("User with given username or login does not exist");
-        if (!encoder.matches(existingUser.getPassword(), user.getPassword())) throw new Exception("Password incorrect");
+        if (!encoder.matches(user.getPassword(), existingUser.getPassword())) throw new Exception("Password incorrect");
 
         existingUser.setPassword(encoder.encode(newPassword));
         userRepository.save(existingUser);

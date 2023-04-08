@@ -1,5 +1,6 @@
 package com.login.dbs.LoginForm.controllers;
 
+import com.login.dbs.LoginForm.dtos.PasswordChangeDto;
 import com.login.dbs.LoginForm.dtos.RecoveryEmailDto;
 import com.login.dbs.LoginForm.models.User;
 import com.login.dbs.LoginForm.services.UserService;
@@ -31,8 +32,8 @@ public class UserController {
     }
 
     @PostMapping("/password-change")
-    public void changePassword(@RequestBody User user, @RequestBody String newPassword) throws Exception {
-        userService.changePassword(user, newPassword);
+    public void changePassword(@RequestBody PasswordChangeDto passwordChangeDto) throws Exception {
+        userService.changePassword(passwordChangeDto.user(), passwordChangeDto.newPassword());
     }
 
     @PostMapping("/password-recovery")
