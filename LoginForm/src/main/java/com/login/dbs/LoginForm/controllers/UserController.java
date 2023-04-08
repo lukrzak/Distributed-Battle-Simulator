@@ -1,5 +1,6 @@
 package com.login.dbs.LoginForm.controllers;
 
+import com.login.dbs.LoginForm.dtos.RecoveryEmailDto;
 import com.login.dbs.LoginForm.models.User;
 import com.login.dbs.LoginForm.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/dbs/login")
+@RequestMapping("/api/v1/dbs")
 public class UserController {
 
     @Autowired
@@ -35,7 +36,7 @@ public class UserController {
     }
 
     @PostMapping("/password-recovery")
-    public void recoverPassword(String email){
-
+    public void recoverPassword(@RequestBody RecoveryEmailDto recoveryEmail) throws Exception {
+        userService.recoverPassword(recoveryEmail.email());
     }
 }
