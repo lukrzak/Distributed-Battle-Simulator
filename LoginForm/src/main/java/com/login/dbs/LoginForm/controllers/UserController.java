@@ -26,7 +26,7 @@ public class UserController {
     }
 
     @PostMapping("/authenticate")
-    public User authenticateUser(@RequestBody User user) throws Exception {
+    public boolean authenticateUser(@RequestBody User user) throws Exception {
         return userService.authenticateUser(user);
     }
 
