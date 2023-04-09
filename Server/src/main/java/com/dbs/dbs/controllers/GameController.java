@@ -1,10 +1,8 @@
 package com.dbs.dbs.controllers;
 
 import com.dbs.dbs.enumerations.UnitEnum;
-import com.dbs.dbs.exceptions.UnitDoesntExistException;
 import com.dbs.dbs.models.Game;
 import com.dbs.dbs.models.units.Unit;
-import com.dbs.dbs.models.units.UnitFactory;
 import com.dbs.dbs.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,18 +34,19 @@ public class GameController{
      * @param posX X coordinate of destination.
      * @param posY Y coordinate of destination.
      */
-    public void moveUnit(Long unitId, double posX, double posY) throws UnitDoesntExistException {
+    public void moveUnit(Long unitId, double posX, double posY){
         Unit unit = gameService.getUnitOfGivenId(unitId);
-        Thread moveThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    gameService.moveUnit(unit, posX, posY);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+        Runnable moveTask = () -> {
+            try {
+                gameService.moveUnit(unit, posX, posY);
+            } catch (InterruptedException e) {
+                System.out.println("sleep interrupt");
             }
-        });
+        };
+
+        if(unit.getMoveTask() != null) unit.getMoveTask().interrupt();
+        Thread moveThread = new Thread(moveTask);
+        unit.setMoveTask(moveThread);
         moveThread.start();
     }
 
@@ -57,22 +56,23 @@ public class GameController{
      * @param attackerId ID of unit. This unit will deal damage toward defender.
      * @param defenderId ID of unit. This unit will receive dealt damage.
      */
-    public void attackUnit(Long attackerId, Long defenderId) throws UnitDoesntExistException {
-        Thread attackThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    gameService.attackUnit(attackerId, defenderId);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
+    public void attackUnit(Long attackerId, Long defenderId){
+        Unit attackingUnit = gameService.getUnitOfGivenId(attackerId);
+        Runnable attackTask = () -> {
+            try {
+                gameService.attackUnit(attackerId, defenderId);
+            } catch (Exception e) {
+                System.out.println("sleep interrupt");
             }
-        });
+        };
+
+        if(attackingUnit.getAttackTask() != null) attackingUnit.getAttackTask().interrupt();
+        Thread attackThread = new Thread(attackTask);
+        attackingUnit.setAttackTask(attackThread);
         attackThread.start();
     }
 
     public void createUnit(UnitEnum type, double posX, double posY, boolean player){
-        Unit unit = UnitFactory.createUnit(type, posX, posY);
         Thread createUnitThread = new Thread(new Runnable() {
             @Override
             public void run() {

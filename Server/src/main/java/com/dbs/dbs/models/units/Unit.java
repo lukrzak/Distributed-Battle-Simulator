@@ -17,6 +17,8 @@ public abstract class Unit {
     private Integer cost;
     private Double positionX;
     private Double positionY;
+    private Thread moveTask;
+    private Thread attackTask;
 
     public Unit(Long id, String name, Double range, Double speed, Double damage, Double health, Integer cost, Double positionX, Double positionY) {
         this.id = id;

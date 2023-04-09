@@ -39,6 +39,7 @@ public class GameService{
             if(distanceTraveled >= distance){
                 unit.setPositionX(newX);
                 unit.setPositionY(newY);
+                unit.setMoveTask(null);
             }
             else{
                 unit.setPositionY(unit.getPositionY() + sin(angle));
