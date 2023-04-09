@@ -4,7 +4,6 @@ import com.dbs.dbs.controllers.GameController;
 import com.dbs.dbs.enumerations.CommandEnum;
 import com.dbs.dbs.enumerations.UnitEnum;
 import com.dbs.dbs.exceptions.TooManyConnectionsException;
-import com.dbs.dbs.exceptions.UnitDoesntExistException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -71,7 +70,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
      * @throws IOException Exception is thrown when error occurs while trying to parse JSON passed as String into object.
      */
     @Override
-    public void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException, UnitDoesntExistException {
+    public void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException{
         JsonNode jsonNode = new ObjectMapper().readTree(message.getPayload());
         CommandEnum command = CommandEnum.valueOf(jsonNode.get("command").asText());
         String body = jsonNode.get("body").toString();
@@ -98,7 +97,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
      * @param body Json given in String with body that contains all necessary parameters to pass.
      * @throws JsonProcessingException  Exception is thrown when error occurs while trying to parse JSON passed as String into object.
      */
-    private void handleCommand(CommandEnum command, String body) throws JsonProcessingException, UnitDoesntExistException {
+    private void handleCommand(CommandEnum command, String body) throws JsonProcessingException{
         switch(command){
             case MOVE -> {
                 MoveMessage message = new ObjectMapper().readValue(body, MoveMessage.class);

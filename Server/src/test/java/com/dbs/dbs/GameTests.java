@@ -2,13 +2,11 @@ package com.dbs.dbs;
 
 import com.dbs.dbs.controllers.GameController;
 import com.dbs.dbs.enumerations.UnitEnum;
-import com.dbs.dbs.exceptions.UnitDoesntExistException;
 import com.dbs.dbs.models.Game;
 import com.dbs.dbs.models.units.*;
 import com.dbs.dbs.services.GameService;
 import com.dbs.dbs.services.UnitService;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static java.lang.Math.cos;
@@ -39,7 +37,7 @@ public class GameTests {
     }
 
     @Test
-    void attackAndRunSimulation() throws InterruptedException, UnitDoesntExistException {
+    void attackAndRunSimulation() throws InterruptedException{
         Unit attacker = UnitFactory.createUnit(UnitEnum.FOOTMAN, 0.0, 0.0);
         Unit defender = UnitFactory.createUnit(UnitEnum.PIKEMAN, 0.0, 1.0);
 
@@ -62,12 +60,11 @@ public class GameTests {
     }
 
     @Test
-    void getUnitOfGivenIdTest() throws UnitDoesntExistException {
+    void getUnitOfGivenIdTest(){
         game.initializeUnits();
         assertNotNull(gameService.getUnitOfGivenId(1L));
         Long numberOfStartingUnits = Game.id;
         assertNotNull(gameService.getUnitOfGivenId(numberOfStartingUnits - 1));
-        assertThrows(UnitDoesntExistException.class, () -> gameService.getUnitOfGivenId(numberOfStartingUnits));
 
         try{
             gameService.createUnit(UnitEnum.ARCHER, 10.0, 10.0, true);
