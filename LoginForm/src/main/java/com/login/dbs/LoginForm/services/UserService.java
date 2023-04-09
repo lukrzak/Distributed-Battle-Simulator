@@ -1,29 +1,20 @@
 package com.login.dbs.LoginForm.services;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.login.dbs.LoginForm.models.User;
 import com.login.dbs.LoginForm.repositories.UserRepository;
-import jakarta.mail.*;
-import jakarta.mail.internet.*;
-import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailMessage;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.LinkedList;
-import java.util.List;
 
 
 @Service
@@ -33,10 +24,8 @@ public class UserService {
     private final UserRepository userRepository;
     @Autowired
     private BCryptPasswordEncoder encoder;
-
     @Autowired
     private JavaMailSender mailSender;
-
     @Value("${config.email.login}")
     private String emailUsername;
 
@@ -60,12 +49,10 @@ public class UserService {
     }
 
     public void changePassword(User user, String newPassword) throws Exception {
-        User existingUser = userRepository.findByUsernameOrMail(user.getUsername(), user.getMail());
-        if (existingUser == null) throw new Exception("User with given username or login does not exist");
-        if (!encoder.matches(user.getPassword(), existingUser.getPassword())) throw new Exception("Password incorrect");
-
-        existingUser.setPassword(encoder.encode(newPassword));
-        userRepository.save(existingUser);
+        if(authenticateUser(user)){
+            user.setPassword(encoder.encode(newPassword));
+            userRepository.save(user);
+        }
     }
 
     public void recoverPassword(String email) throws Exception {
@@ -77,7 +64,7 @@ public class UserService {
 
         String text =
                 "Your recovery password:\n" + generatedPassword +
-                "\nPlease change your password immediately after login in";
+                "\nPlease change your password immediately after logging in";
         sendEmail(email, "Password Recovery", text);
     }
 
