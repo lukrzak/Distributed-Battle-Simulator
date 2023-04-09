@@ -1,7 +1,6 @@
 package com.dbs.dbs.controllers;
 
 import com.dbs.dbs.enumerations.UnitEnum;
-import com.dbs.dbs.models.Game;
 import com.dbs.dbs.models.units.Unit;
 import com.dbs.dbs.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ public class GameController{
 
     /**
      * Constructor of GameController.
-     *
      * @param gameService Autowired GameService instance.
      */
     @Autowired
@@ -29,7 +27,8 @@ public class GameController{
     }
 
     /**
-     * moveUnit creates thread, where unit is moved towards point (posX, posY).
+     * moveUnit creates thread, where unit is moved towards point (posX, posY). It sets unit's moveTask of Thread
+     * type to this thread or stops currently running thread that is responsible for moving.
      * @param unitId ID of unit, that will be moved.
      * @param posX X coordinate of destination.
      * @param posY Y coordinate of destination.
@@ -40,7 +39,7 @@ public class GameController{
             try {
                 gameService.moveUnit(unit, posX, posY);
             } catch (InterruptedException e) {
-                System.out.println("sleep interrupt");
+                System.out.println("Direction change");
             }
         };
 
@@ -51,8 +50,9 @@ public class GameController{
     }
 
     /**
-     * attackUnit is responsible for attacking unit in time intervals.
-     * Method creates new Thread, that ends when defender is out of range.
+     * attackUnit is responsible for attacking unit in time intervals. It sets unit's attackTask of Thread type to this
+     * thread or stops currently running thread that is responsible for attacking. Thread ends when defender is out of
+     * range.
      * @param attackerId ID of unit. This unit will deal damage toward defender.
      * @param defenderId ID of unit. This unit will receive dealt damage.
      */
@@ -62,7 +62,7 @@ public class GameController{
             try {
                 gameService.attackUnit(attackerId, defenderId);
             } catch (Exception e) {
-                System.out.println("sleep interrupt");
+                System.out.println("Direction change");
             }
         };
 
@@ -72,15 +72,19 @@ public class GameController{
         attackThread.start();
     }
 
+    /**
+     * Method creates new unit of given type at given coordinates for player after 2500ms.
+     * @param type Type of unit to create.
+     * @param posX X coordinate of unit creation position.
+     * @param posY Y coordinate of unit creation position.
+     * @param player Boolean type - true: playerA, false: playerB. In future player will be passed as byte variable.
+     */
     public void createUnit(UnitEnum type, double posX, double posY, boolean player){
-        Thread createUnitThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    gameService.createUnit(type, posX, posY, player);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+        Thread createUnitThread = new Thread(() -> {
+            try {
+                gameService.createUnit(type, posX, posY, player);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
         });
         createUnitThread.start();
