@@ -1,6 +1,7 @@
 package com.dbs.dbs.services;
 
 import com.dbs.dbs.enumerations.UnitEnum;
+import com.dbs.dbs.exceptions.TooManyConnectionsException;
 import com.dbs.dbs.models.Game;
 import com.dbs.dbs.models.Player;
 import com.dbs.dbs.models.units.Unit;
@@ -112,5 +113,16 @@ public class GameService{
         if(debug) System.out.println(unit.getName() + " has been defeated");
 
         unit.getPlayer().getUnits().remove(unit);
+    }
+
+    public void initializeNewPlayer() throws TooManyConnectionsException {
+        if(game.getPlayers().size() > 3){
+            throw new TooManyConnectionsException();
+        }
+        game.getPlayers().add(new Player());
+    }
+
+    public void removePlayer(Player player){
+        game.getPlayers().remove(player);
     }
 }

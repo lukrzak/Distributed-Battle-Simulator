@@ -5,6 +5,7 @@ import com.dbs.dbs.enumerations.CommandEnum;
 import com.dbs.dbs.enumerations.UnitEnum;
 import com.dbs.dbs.exceptions.TooManyConnectionsException;
 import com.dbs.dbs.models.Player;
+import com.dbs.dbs.services.GameService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,6 +32,8 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
      */
     @Autowired
     private final GameController gameController;
+    @Autowired
+    private GameService gameService;
 
     /**
      * Constructor of GameWebSocketHandler.
@@ -48,11 +51,9 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
      */
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        System.out.println("Connected");
         super.afterConnectionEstablished(session);
-        if(sessions.size() >= 2){
-            throw new TooManyConnectionsException();
-        }
+        System.out.println("Connected");
+        gameService.initializeNewPlayer();
         sessions.add(session);
     }
 

@@ -9,6 +9,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @Data
 public class Player {
+    private Long id;
     private Double money;
     private CopyOnWriteArrayList<Unit> units = new CopyOnWriteArrayList<>();
 

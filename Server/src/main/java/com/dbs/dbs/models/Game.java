@@ -11,7 +11,5 @@ public class Game {
     private List<Player> players = new ArrayList<>();
 
     public Game() {
-        players.add(new Player());
-        players.add(new Player());
     }
 }
