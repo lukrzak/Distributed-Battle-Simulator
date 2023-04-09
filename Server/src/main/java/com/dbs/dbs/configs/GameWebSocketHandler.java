@@ -48,6 +48,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
      */
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        System.out.println("Connected");
         super.afterConnectionEstablished(session);
         if(sessions.size() >= 2){
             throw new TooManyConnectionsException();

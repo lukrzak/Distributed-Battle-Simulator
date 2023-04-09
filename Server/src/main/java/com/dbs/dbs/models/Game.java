@@ -4,23 +4,22 @@ import com.dbs.dbs.enumerations.UnitEnum;
 import com.dbs.dbs.models.units.*;
 import lombok.Data;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Data
 public class Game {
-    private List<Unit> playerA = new LinkedList<>();
-    private List<Unit> playerB = new LinkedList<>();
+    private CopyOnWriteArrayList<Unit> playerA = new CopyOnWriteArrayList<>();
+    private CopyOnWriteArrayList<Unit> playerB = new CopyOnWriteArrayList<>();
     public static Long id = 0L;
 
     public Game() {
-
+        initializeUnits();
     }
 
     public void initializeUnits(){
         playerA.add(UnitFactory.createUnit(UnitEnum.FOOTMAN, 1.0, 1.0));
-        playerA.add(UnitFactory.createUnit(UnitEnum.FOOTMAN, 2.0, 2.0));
-        playerA.add(UnitFactory.createUnit(UnitEnum.KNIGHT, 3.0, 3.0));
+        playerA.add(UnitFactory.createUnit(UnitEnum.FOOTMAN, 2.0, 1.0));
+        playerA.add(UnitFactory.createUnit(UnitEnum.KNIGHT, 1.0, 2.0));
         playerA.add(UnitFactory.createUnit(UnitEnum.PIKEMAN, 4.0, 4.0));
         playerA.add(UnitFactory.createUnit(UnitEnum.ARCHER, 5.0, 5.0));
 

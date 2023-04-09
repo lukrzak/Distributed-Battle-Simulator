@@ -1,11 +1,11 @@
 package com.dbs.dbs.services;
 
 import com.dbs.dbs.enumerations.UnitEnum;
-import com.dbs.dbs.exceptions.UnitDoesntExistException;
 import com.dbs.dbs.models.Game;
 import com.dbs.dbs.models.units.Unit;
 import com.dbs.dbs.models.units.UnitFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -20,6 +20,8 @@ public class GameService{
     private final UnitService unitService;
     @Autowired
     private final Game game;
+    @Value("${dbs.debug.info}")
+    private boolean debug;
 
     public GameService(UnitService unitService, Game game) {
         this.unitService = unitService;
@@ -27,6 +29,7 @@ public class GameService{
     }
 
     public void moveUnit(Unit unit, Double newX, Double newY) throws InterruptedException {
+        if(unit == null) return;
         double angle = getMovingDirectionAngle(unit, newX, newY);
         double distance = sqrt(pow(unit.getPositionX() - newX, 2) + pow(unit.getPositionY() - newY, 2));
         double distanceTraveled = 0;
@@ -42,7 +45,9 @@ public class GameService{
                 unit.setPositionX(unit.getPositionX() + cos(angle));
             }
 
-            System.out.println("Unit " + unit.getName() + " at pos (" + unit.getPositionX() + "," + unit.getPositionY() + ")");
+            if(debug){
+                System.out.println("Unit " + unit.getName() + " at pos (" + unit.getPositionX() + "," + unit.getPositionY() + ")");
+            }
             Thread.sleep((int)(1000 / unit.getSpeed()));
         }
     }
@@ -51,30 +56,43 @@ public class GameService{
         return Math.atan2((newY - unit.getPositionY()), (newX - unit.getPositionX()));
     }
 
-    public void attackUnit(Unit attacker, Unit defender) throws InterruptedException {
-        double distance = sqrt(pow(attacker.getPositionX() - defender.getPositionX(), 2)
-                + pow(attacker.getPositionY() - defender.getPositionY(), 2));
-        double damageFactor = unitService.getCounterFactor(attacker.getClass(), defender.getClass());
+    public void attackUnit(Long attackerId, Long defenderId) throws InterruptedException{
+        Unit attacker;
+        Unit defender;
+        double damage;
+        synchronized (this){
+            attacker = getUnitOfGivenId(attackerId);
+            defender = getUnitOfGivenId(defenderId);
+            if(attacker == null || defender == null) return;
 
-        while(distance <= attacker.getRange()){
-            double damage = attacker.getDamage() * damageFactor;
-            defender.setHealth(defender.getHealth() - damage);
-            distance = sqrt(pow(attacker.getPositionX() - defender.getPositionX(), 2)
+            double distance = sqrt(pow(attacker.getPositionX() - defender.getPositionX(), 2)
                     + pow(attacker.getPositionY() - defender.getPositionY(), 2));
+            if(distance > attacker.getRange()) {
+                System.out.println("Out of range");
+                return;
+            }
+            double damageFactor = unitService.getCounterFactor(attacker.getClass(), defender.getClass());
 
+            damage = attacker.getDamage() * damageFactor;
+            defender.setHealth(defender.getHealth() - damage);
+            if(defender.getHealth() <= 0) killUnit(defender);
+        }
+
+        if(debug){
             System.out.println(attacker.getName() + " attacked " + defender.getName() + " for " + damage + " damage");
             System.out.println("Defender " + defender.getName() + " has now " + defender.getHealth() + " health");
-            Thread.sleep(500);
         }
-        System.out.println("Out of range");
+
+        Thread.sleep(500);
+        attackUnit(attackerId, defenderId);
     }
 
 
-    public Unit getUnitOfGivenId(Long id) throws UnitDoesntExistException {
+    public Unit getUnitOfGivenId(Long id){
         for (Unit unit: Stream.concat(game.getPlayerA().stream(), game.getPlayerB().stream()).toList()){
             if (Objects.equals(unit.getId(), id)) return unit;
         }
-        throw new UnitDoesntExistException();
+        return null;
     }
 
     public void createUnit(UnitEnum type, double posX, double posY, boolean player) throws InterruptedException {
@@ -82,5 +100,12 @@ public class GameService{
         Unit newUnit = UnitFactory.createUnit(type, posX, posY);
         if(player) game.getPlayerA().add(newUnit);
         else game.getPlayerB().add(newUnit);
+    }
+
+    public void killUnit(Unit unit){
+        if(debug) System.out.println(unit.getName() + " has been defeated");
+
+        if(game.getPlayerA().contains(unit)) game.getPlayerA().remove(unit);
+        else game.getPlayerB().remove(unit);
     }
 }

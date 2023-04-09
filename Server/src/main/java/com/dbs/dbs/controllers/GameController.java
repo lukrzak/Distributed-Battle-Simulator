@@ -58,14 +58,12 @@ public class GameController{
      * @param defenderId ID of unit. This unit will receive dealt damage.
      */
     public void attackUnit(Long attackerId, Long defenderId) throws UnitDoesntExistException {
-        Unit attacker = gameService.getUnitOfGivenId(attackerId);
-        Unit defender = gameService.getUnitOfGivenId(defenderId);
         Thread attackThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    gameService.attackUnit(attacker, defender);
-                } catch (InterruptedException e) {
+                    gameService.attackUnit(attackerId, defenderId);
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
