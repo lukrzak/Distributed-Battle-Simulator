@@ -4,6 +4,7 @@ import com.dbs.dbs.controllers.GameController;
 import com.dbs.dbs.enumerations.CommandEnum;
 import com.dbs.dbs.enumerations.UnitEnum;
 import com.dbs.dbs.exceptions.TooManyConnectionsException;
+import com.dbs.dbs.models.Player;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -129,5 +130,5 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
      */
     public record AttackMessage(Long attackerId, Long defenderId){}
 
-    public record CreateMessage(UnitEnum type, double posX, double posY, boolean player){}
+    public record CreateMessage(UnitEnum type, double posX, double posY, Player player){}
 }

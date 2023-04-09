@@ -1,6 +1,7 @@
 package com.dbs.dbs.controllers;
 
 import com.dbs.dbs.enumerations.UnitEnum;
+import com.dbs.dbs.models.Player;
 import com.dbs.dbs.models.units.Unit;
 import com.dbs.dbs.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +80,7 @@ public class GameController{
      * @param posY Y coordinate of unit creation position.
      * @param player Boolean type - true: playerA, false: playerB. In future player will be passed as byte variable.
      */
-    public void createUnit(UnitEnum type, double posX, double posY, boolean player){
+    public void createUnit(UnitEnum type, double posX, double posY, Player player){
         Thread createUnitThread = new Thread(() -> {
             try {
                 gameService.createUnit(type, posX, posY, player);

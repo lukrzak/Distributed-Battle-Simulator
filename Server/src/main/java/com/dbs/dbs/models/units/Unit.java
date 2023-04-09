@@ -1,5 +1,6 @@
 package com.dbs.dbs.models.units;
 
+import com.dbs.dbs.models.Player;
 import lombok.Data;
 
 /**
@@ -19,17 +20,15 @@ public abstract class Unit {
     private Double positionY;
     private Thread moveTask;
     private Thread attackTask;
+    private Player player;
 
-    public Unit(Long id, String name, Double range, Double speed, Double damage, Double health, Integer cost, Double positionX, Double positionY) {
-        this.id = id;
+    public Unit(String name, Double range, Double speed, Double damage, Double health, Integer cost) {
         this.name = name;
         this.range = range;
         this.speed = speed;
         this.damage = damage;
         this.health = health;
         this.cost = cost;
-        this.positionX = positionX;
-        this.positionY = positionY;
     }
 
 }

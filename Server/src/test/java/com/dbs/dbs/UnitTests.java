@@ -1,6 +1,7 @@
 package com.dbs.dbs;
 
 import com.dbs.dbs.enumerations.UnitEnum;
+import com.dbs.dbs.models.Player;
 import com.dbs.dbs.models.units.*;
 import com.dbs.dbs.services.UnitService;
 import com.dbs.dbs.models.units.UnitFactory;
@@ -13,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class UnitTests {
 
+    Player player = new Player();
     UnitService unitService = new UnitService();
 
     @Test
@@ -26,17 +28,17 @@ public class UnitTests {
     @Test
     @DisplayName("Creation units from UnitFactory")
     void unitFactoryTest(){
-        assertTrue(UnitFactory.createUnit(UnitEnum.ARCHER, 0.0, 0.0) instanceof Archer);
-        assertNotNull(UnitFactory.createUnit(UnitEnum.FOOTMAN,  0.0, 0.0));
-        assertNotNull(UnitFactory.createUnit(UnitEnum.PIKEMAN,  0.0, 0.0));
+        assertTrue(UnitFactory.createUnit(UnitEnum.ARCHER, 0.0, 0.0, player) instanceof Archer);
+        assertNotNull(UnitFactory.createUnit(UnitEnum.FOOTMAN,  0.0, 0.0, player));
+        assertNotNull(UnitFactory.createUnit(UnitEnum.PIKEMAN,  0.0, 0.0, player));
     }
 
     @Test
     @DisplayName("Testing units health after attack")
     void attackTest(){
-        Unit knight = new Knight(1L,0.0,0.0);
-        Unit pikeman = new Pikeman(1L,0.0,0.0);
-        Unit footman = new Footman(1L,0.0,0.0);
+        Unit knight = UnitFactory.createUnit(UnitEnum.KNIGHT, 0.0, 0.0, player);
+        Unit pikeman = UnitFactory.createUnit(UnitEnum.PIKEMAN, 0.0, 0.0, player);
+        Unit footman = UnitFactory.createUnit(UnitEnum.FOOTMAN, 0.0, 0.0, player);
         double knightMaxHealth = knight.getHealth();
         double pikemanMaxHealth = pikeman.getHealth();
         unitService.attack(pikeman, knight);

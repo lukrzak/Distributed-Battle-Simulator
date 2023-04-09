@@ -2,13 +2,16 @@ package com.dbs.dbs.services;
 
 import com.dbs.dbs.enumerations.UnitEnum;
 import com.dbs.dbs.models.Game;
+import com.dbs.dbs.models.Player;
 import com.dbs.dbs.models.units.Unit;
 import com.dbs.dbs.models.units.UnitFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.lang.Math.*;
@@ -90,23 +93,24 @@ public class GameService{
 
 
     public Unit getUnitOfGivenId(Long id){
-        for (Unit unit: Stream.concat(game.getPlayerA().stream(), game.getPlayerB().stream()).toList()){
-            if (Objects.equals(unit.getId(), id)) return unit;
+        List<Unit> allUnits = game.getPlayers().stream()
+                .flatMap(player -> player.getUnits().stream())
+                .toList();
+        for(Unit unit: allUnits){
+            if(Objects.equals(unit.getId(), id)) return unit;
         }
         return null;
     }
 
-    public void createUnit(UnitEnum type, double posX, double posY, boolean player) throws InterruptedException {
+    public void createUnit(UnitEnum type, double posX, double posY, Player player) throws InterruptedException {
         Thread.sleep(2500);
-        Unit newUnit = UnitFactory.createUnit(type, posX, posY);
-        if(player) game.getPlayerA().add(newUnit);
-        else game.getPlayerB().add(newUnit);
+        Unit newUnit = UnitFactory.createUnit(type, posX, posY, player);
+        player.getUnits().add(newUnit);
     }
 
     public void killUnit(Unit unit){
         if(debug) System.out.println(unit.getName() + " has been defeated");
 
-        if(game.getPlayerA().contains(unit)) game.getPlayerA().remove(unit);
-        else game.getPlayerB().remove(unit);
+        unit.getPlayer().getUnits().remove(unit);
     }
 }

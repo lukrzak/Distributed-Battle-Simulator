@@ -3,6 +3,7 @@ package com.dbs.dbs;
 import com.dbs.dbs.controllers.GameController;
 import com.dbs.dbs.enumerations.UnitEnum;
 import com.dbs.dbs.models.Game;
+import com.dbs.dbs.models.Player;
 import com.dbs.dbs.models.units.*;
 import com.dbs.dbs.services.GameService;
 import com.dbs.dbs.services.UnitService;
@@ -17,12 +18,13 @@ import static org.junit.jupiter.api.Assertions.*;
 public class GameTests {
 
     Game game = new Game();
+    Player player = new Player();
     GameService gameService = new GameService(new UnitService(), game);
     GameController gameController = new GameController(this.gameService);
 
     @Test
     void getMovingDirectionAngleTest(){
-        Unit unit = new Footman(1L, 0.0, 0.0);
+        Unit unit = UnitFactory.createUnit(UnitEnum.FOOTMAN, 0.0, 0.0, player);
         assertTrue(cos(gameService.getMovingDirectionAngle(unit, 1.0, 1.0)) > 0);
         assertTrue(sin(gameService.getMovingDirectionAngle(unit, 1.0, 1.0)) > 0);
 
@@ -38,8 +40,8 @@ public class GameTests {
 
     @Test
     void attackAndRunSimulation() throws InterruptedException{
-        Unit attacker = UnitFactory.createUnit(UnitEnum.FOOTMAN, 0.0, 0.0);
-        Unit defender = UnitFactory.createUnit(UnitEnum.PIKEMAN, 0.0, 1.0);
+        Unit attacker = UnitFactory.createUnit(UnitEnum.FOOTMAN, 0.0, 0.0, player);
+        Unit defender = UnitFactory.createUnit(UnitEnum.PIKEMAN, 0.0, 1.0, player);
 
         System.out.println(attacker.getName() + " initiated fight with " + defender.getName());
         System.out.println("--------------------");
@@ -61,13 +63,12 @@ public class GameTests {
 
     @Test
     void getUnitOfGivenIdTest(){
-        game.initializeUnits();
         assertNotNull(gameService.getUnitOfGivenId(1L));
         Long numberOfStartingUnits = Game.id;
         assertNotNull(gameService.getUnitOfGivenId(numberOfStartingUnits - 1));
 
         try{
-            gameService.createUnit(UnitEnum.ARCHER, 10.0, 10.0, true);
+            gameService.createUnit(UnitEnum.ARCHER, 10.0, 10.0, player);
         }
         catch(InterruptedException e){
             System.out.println(e.getMessage());
