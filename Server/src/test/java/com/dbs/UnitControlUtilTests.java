@@ -7,26 +7,23 @@ import com.dbs.models.units.UnitFactory;
 import com.dbs.utils.UnitControlUtil;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 class UnitControlUtilTests {
 
     @Test
-    void testUnitMovement() {
+    void testUnitMovement() throws InterruptedException {
         Unit unitToMove = UnitFactory.createUnit(UnitType.KNIGHT, 1.0, 1.0, new Player());
 
-        try {
-            UnitControlUtil.moveUnit(unitToMove, 10.0, 10.0);
-        } catch (InterruptedException e) {
-            fail("Unexpected interrupt while moving");
-        }
+        UnitControlUtil.moveUnit(unitToMove, 10.0, 10.0);
 
-        assertEquals(unitToMove.getPositionX(), 10.0);
-        assertEquals(unitToMove.getPositionY(), 10.0);
+        assertEquals(10.0, unitToMove.getPositionX());
+        assertEquals(10.0, unitToMove.getPositionY());
     }
 
     @Test
@@ -38,17 +35,13 @@ class UnitControlUtilTests {
     }
 
     @Test
-    void testUnitAttack() {
+    void testUnitAttack() throws InterruptedException {
         Player p1 = new Player();
         Player p2 = new Player();
         Unit attacker = UnitFactory.createUnit(UnitType.FOOTMAN, 1.0, 1.0, p1);
         Unit defender = UnitFactory.createUnit(UnitType.ARCHER, 1.5, 1.5, p2);
 
-        try {
-            UnitControlUtil.attackUnit(attacker, defender);
-        } catch (InterruptedException e) {
-            fail("Unexpected interrupt while attacking");
-        }
+        UnitControlUtil.attackUnit(attacker, defender);
 
         assertTrue(p1.getUnits().contains(attacker));
         assertFalse(p2.getUnits().contains(defender));
@@ -64,17 +57,29 @@ class UnitControlUtilTests {
     }
 
     @Test
-    void testUnitAttackIfOutOfRange() {
+    void testUnitAttackIfOutOfRange() throws InterruptedException {
         Unit untouchedUnit = UnitFactory.createUnit(UnitType.FOOTMAN, 0.0, 0.0, new Player());
         Unit attacker = UnitFactory.createUnit(UnitType.FOOTMAN, 1.0, 1.0, new Player());
         Unit defender = UnitFactory.createUnit(UnitType.FOOTMAN, 50.0, 50.0, new Player());
 
-        try {
-            UnitControlUtil.attackUnit(attacker, defender);
-        } catch (InterruptedException e) {
-            fail("Unexpected interrupt while attacking");
-        }
+        UnitControlUtil.attackUnit(attacker, defender);
 
         assertEquals(untouchedUnit.getHealth(), defender.getHealth());
+    }
+
+    @Test
+    void testCreatingUnits() throws InterruptedException {
+        Player p1 = new Player();
+        Player p2 = new Player();
+        int initialNumberOfUnits = p1.getUnits().size();
+
+        Unit u1 = UnitControlUtil.createNewUnit(UnitType.FOOTMAN, 1.0, 1.0, p1);
+        Unit u2 = UnitControlUtil.createNewUnit(UnitType.FOOTMAN, 1.0, 1.0, p1);
+        Unit u3 = UnitControlUtil.createNewUnit(UnitType.FOOTMAN, 1.0, 1.0, p2);
+
+        assertEquals(initialNumberOfUnits + 2, p1.getUnits().size());
+        assertEquals(initialNumberOfUnits + 1, p2.getUnits().size());
+        assertTrue(p1.getUnits().containsAll(List.of(u1, u2)));
+        assertTrue(p2.getUnits().contains(u3));
     }
 }

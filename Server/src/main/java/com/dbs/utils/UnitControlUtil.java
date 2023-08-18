@@ -81,9 +81,9 @@ public class UnitControlUtil {
         attackUnit(attacker, defender);
     }
 
-    public static void createNewUnit(UnitType type, double posX, double posY, Player player) throws InterruptedException {
+    public static Unit createNewUnit(UnitType type, double posX, double posY, Player player) throws InterruptedException {
         Thread.sleep(2500);
-        UnitFactory.createUnit(type, posX, posY, player);
+        return UnitFactory.createUnit(type, posX, posY, player);
     }
 
     private static double getMovingDirectionAngle(Unit unit, Double newX, Double newY) {
