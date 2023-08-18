@@ -5,11 +5,14 @@ import com.dbs.models.Game;
 import com.dbs.models.Player;
 import com.dbs.models.units.Unit;
 import com.dbs.services.GameService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Controller
+@Log4j2
 public class GameController {
 
     private final GameService gameService;
@@ -50,7 +53,7 @@ public class GameController {
         if (game == null)
             throw new NullPointerException("Game with given id doesn't exist");
         Optional<Unit> attacker = gameService.getUnitOfGivenId(attackerId, game);
-        Optional<Unit> defender = gameService.getUnitOfGivenId(attackerId, game);
+        Optional<Unit> defender = gameService.getUnitOfGivenId(defenderId, game);
         if (attacker.isEmpty() || defender.isEmpty())
             throw new NullPointerException("Unit with id " + attackerId + " or " + defenderId + " doesn't exist");
 

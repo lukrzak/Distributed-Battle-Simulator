@@ -57,11 +57,11 @@ public class UnitControlUtil {
 
     public static void attackUnit(Unit attacker, Unit defender) throws InterruptedException {
         validateUnitsAttack(attacker, defender);
-        synchronized (defender) {
+        synchronized (defender.getPlayer().getUnits()) {
             double distance = sqrt(pow(attacker.getPositionX() - defender.getPositionX(), 2)
                     + pow(attacker.getPositionY() - defender.getPositionY(), 2));
             if (distance > attacker.getRange()) {
-                LOGGER.debug("Out of range");
+                LOGGER.debug(defender + " escaped the range of " + attacker);
                 return;
             }
 
@@ -72,18 +72,19 @@ public class UnitControlUtil {
                 killUnit(defender);
                 return;
             }
-
-            LOGGER.debug(attacker + " attacked " + defender.getName() + " for " + damage + " damage");
+            LOGGER.debug("Defender " + defender + " has now " + defender.getHealth() + " health. Damage caused by " + attacker + "=" + damage);
         }
 
-        LOGGER.debug("Defender " + defender + " has now " + defender.getHealth() + " health");
         Thread.sleep(500);
         attackUnit(attacker, defender);
     }
 
     public static Unit createNewUnit(UnitType type, double posX, double posY, Player player) throws InterruptedException {
-        Thread.sleep(1500);
-        Unit unit = UnitFactory.createUnit(type, posX, posY, player);
+        Unit unit;
+        synchronized (player.getUnits()) {
+            Thread.sleep(1500);
+            unit = UnitFactory.createUnit(type, posX, posY, player);
+        }
         LOGGER.debug("Created unit " + unit);
         return unit;
     }

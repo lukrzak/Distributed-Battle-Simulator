@@ -17,7 +17,7 @@ public class Player {
 
     public Player() {
         money = 500;
-        initializeUnits();
+        //initializeUnits();
     }
 
     private void initializeUnits() {
