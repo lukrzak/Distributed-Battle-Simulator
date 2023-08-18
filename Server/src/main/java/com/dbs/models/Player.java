@@ -12,7 +12,7 @@ public class Player {
 
     private long id;
     private int money;
-    private CopyOnWriteArrayList<Unit> units = new CopyOnWriteArrayList<>();
+    private final CopyOnWriteArrayList<Unit> units = new CopyOnWriteArrayList<>();
 
     public Player() {
         money = 500;

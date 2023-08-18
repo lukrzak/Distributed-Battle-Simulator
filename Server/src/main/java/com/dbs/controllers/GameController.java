@@ -1,12 +1,9 @@
 package com.dbs.controllers;
 
 import com.dbs.enumerations.UnitType;
-import com.dbs.exceptions.TooManyConnectionsException;
 import com.dbs.models.Player;
 import com.dbs.models.units.Unit;
 import com.dbs.services.GameService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 
 import java.util.Optional;
@@ -18,7 +15,6 @@ import java.util.Optional;
 public class GameController {
 
     private final GameService gameService;
-    private final Logger LOGGER = LoggerFactory.getLogger(GameController.class);
 
     public GameController(GameService gameService) {
         this.gameService = gameService;
@@ -68,12 +64,4 @@ public class GameController {
     public void createUnit(UnitType type, double posX, double posY, Player player) {
         gameService.createUnit(type, posX, posY, player);
     }
-
-//    public void initializeNewPlayer() {
-//        try {
-//            gameService.initializeNewPlayer();
-//        } catch (TooManyConnectionsException e) {
-//            System.out.println("Too many connections");
-//        }
-//    }
 }
