@@ -1,9 +1,12 @@
 package com.dbs.dbs.models.terrains;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public abstract class Terrain {
+
     private String name;
     private Double speedEffect;
     private Double rangeEffect;

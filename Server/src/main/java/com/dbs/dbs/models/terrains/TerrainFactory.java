@@ -10,11 +10,12 @@ public class TerrainFactory {
 
     /**
      * Returns new instance of Terrain type object.
+     *
      * @param type definied by TerrainEnum
      * @return new instance of Terrain type
      */
-    public static Terrain createTerrain(TerrainEnum type){
-        return switch (type){
+    public static Terrain createTerrain(TerrainEnum type) {
+        return switch (type) {
             case FOREST -> new Forest();
             case LAKE -> new Lake();
             case MOUNTAIN -> new Mountain();
@@ -22,5 +23,4 @@ public class TerrainFactory {
             case SWAMP -> new Swamp();
         };
     }
-
 }

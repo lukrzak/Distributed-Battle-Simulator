@@ -1,6 +1,7 @@
 package com.dbs.dbs.models.terrains;
 
-public class Mountain extends Terrain{
+public class Mountain extends Terrain {
+    
     public Mountain() {
         super("Mountain", 0.65, 1.2);
     }

@@ -1,14 +1,17 @@
 package com.dbs.dbs.models.units;
 
 import com.dbs.dbs.models.Player;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Base of every unit in game.
  * All unit types must extend this class in order to work.
  */
-@Data
+@Getter
+@Setter
 public abstract class Unit {
+
     private Long id;
     private String name;
     private Double range;
@@ -30,5 +33,4 @@ public abstract class Unit {
         this.health = health;
         this.cost = cost;
     }
-
 }

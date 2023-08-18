@@ -12,10 +12,11 @@ public class UnitFactory {
 
     /**
      * Returns new instance of Unit type object.
+     *
      * @param type defined by UnitEnum
      * @return new instance of Unit type
      */
-    public static Unit createUnit(UnitEnum type, Double posX, Double posY, Player player){
+    public static Unit createUnit(UnitEnum type, Double posX, Double posY, Player player) {
         Unit newUnit;
         switch (type) {
             case ARCHER -> newUnit = new Archer();

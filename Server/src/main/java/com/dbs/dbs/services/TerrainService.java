@@ -9,9 +9,4 @@ import java.util.HashMap;
 public class TerrainService {
 
     private final HashMap<Pair<Class<?>, Class<?>>, Double> terrainFactor = new HashMap<>();
-
-    public TerrainService() {
-    }
-
-
 }
