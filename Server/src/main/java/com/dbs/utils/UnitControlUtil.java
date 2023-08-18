@@ -50,7 +50,7 @@ public class UnitControlUtil {
                 unit.setPositionX(unit.getPositionX() + cos(angle));
             }
 
-            LOGGER.debug("Unit " + unit.getName() + " at pos (" + unit.getPositionX() + "," + unit.getPositionY() + ")");
+            LOGGER.debug("Unit " + unit + " at pos (" + unit.getPositionX() + "," + unit.getPositionY() + ")");
             Thread.sleep((int) (1000 / unit.getSpeed()));
         }
     }
@@ -73,17 +73,19 @@ public class UnitControlUtil {
                 return;
             }
 
-            LOGGER.debug(attacker.getName() + " attacked " + defender.getName() + " for " + damage + " damage");
+            LOGGER.debug(attacker + " attacked " + defender.getName() + " for " + damage + " damage");
         }
 
-        LOGGER.debug("Defender " + defender.getName() + " has now " + defender.getHealth() + " health");
+        LOGGER.debug("Defender " + defender + " has now " + defender.getHealth() + " health");
         Thread.sleep(500);
         attackUnit(attacker, defender);
     }
 
     public static Unit createNewUnit(UnitType type, double posX, double posY, Player player) throws InterruptedException {
-        Thread.sleep(2500);
-        return UnitFactory.createUnit(type, posX, posY, player);
+        Thread.sleep(1500);
+        Unit unit = UnitFactory.createUnit(type, posX, posY, player);
+        LOGGER.debug("Created unit " + unit);
+        return unit;
     }
 
     private static double getMovingDirectionAngle(Unit unit, Double newX, Double newY) {
@@ -97,7 +99,7 @@ public class UnitControlUtil {
     }
 
     private static void killUnit(Unit unit) {
-        LOGGER.debug(unit.getName() + " has been defeated");
+        LOGGER.debug(unit + " has been defeated");
         unit.getPlayer().getUnits().remove(unit);
     }
 

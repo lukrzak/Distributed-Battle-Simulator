@@ -1,6 +1,7 @@
 package com.dbs.controllers;
 
 import com.dbs.enumerations.UnitType;
+import com.dbs.models.Game;
 import com.dbs.models.Player;
 import com.dbs.models.units.Unit;
 import com.dbs.services.GameService;
@@ -26,7 +27,10 @@ public class GameController {
      * @param posY   Y coordinate of destination.
      */
     public void moveUnit(Long unitId, double posX, double posY, String gameId) {
-        Optional<Unit> unit = gameService.getUnitOfGivenId(unitId, gameId);
+        Game game = gameService.getGames().get(gameId);
+        if (game == null)
+            throw new NullPointerException("Game with given id doesn't exist");
+        Optional<Unit> unit = gameService.getUnitOfGivenId(unitId, game);
         if (unit.isEmpty())
             throw new NullPointerException("Unit with id " + unitId + " doesn't exist");
 
@@ -42,8 +46,11 @@ public class GameController {
      * @param defenderId ID of unit. This unit will receive dealt damage.
      */
     public void attackUnit(Long attackerId, Long defenderId, String gameId) {
-        Optional<Unit> attacker = gameService.getUnitOfGivenId(attackerId, gameId);
-        Optional<Unit> defender = gameService.getUnitOfGivenId(attackerId, gameId);
+        Game game = gameService.getGames().get(gameId);
+        if (game == null)
+            throw new NullPointerException("Game with given id doesn't exist");
+        Optional<Unit> attacker = gameService.getUnitOfGivenId(attackerId, game);
+        Optional<Unit> defender = gameService.getUnitOfGivenId(attackerId, game);
         if (attacker.isEmpty() || defender.isEmpty())
             throw new NullPointerException("Unit with id " + attackerId + " or " + defenderId + " doesn't exist");
 
