@@ -3,6 +3,10 @@ package com.dbs.models.terrains;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Base of every terrain in game.
+ * All unit types must extend this class in order to work.
+ */
 @Getter
 @Setter
 public abstract class Terrain {

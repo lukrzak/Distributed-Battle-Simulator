@@ -2,11 +2,14 @@ package com.dbs.configs;
 
 import com.dbs.controllers.GameController;
 import com.dbs.enumerations.CommandType;
-import com.dbs.enumerations.UnitType;
-import com.dbs.models.Player;
+import com.dbs.messages.AttackMessage;
+import com.dbs.messages.MoveMessage;
+import com.dbs.messages.CreateMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -23,6 +26,7 @@ import java.util.List;
  */
 public class GameWebSocketHandler extends TextWebSocketHandler {
 
+    private final Logger LOGGER = LoggerFactory.getLogger(GameWebSocketHandler.class);
     private final List<WebSocketSession> sessions = new ArrayList<>();
     private final GameController gameController;
 
@@ -30,24 +34,16 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
         this.gameController = gameController;
     }
 
-    /**
-     * Function adds user's session. It is automatically invoked after connection between client and server is
-     * established.
-     *
-     * @param session See WebSocketSession documentation.
-     * @throws Exception Throws Exception after connection error.
-     */
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         super.afterConnectionEstablished(session);
-        System.out.println("Connected");
-        //gameController.initializeNewPlayer();
+        LOGGER.info("User connected. Session:" + session);
         sessions.add(session);
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
-        System.out.println("Connection closed");
+        LOGGER.info("Connection closed. Session:" + session);
         sessions.remove(session);
     }
 
@@ -66,6 +62,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
         CommandType command = CommandType.valueOf(jsonNode.get("command").asText());
         String body = jsonNode.get("body").toString();
 
+        LOGGER.debug("Received " + command + " command");
         handleCommand(command, body);
         sendMessage(message.getPayload());
     }
@@ -78,7 +75,8 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
      */
     public void sendMessage(String response) throws IOException {
         for (WebSocketSession s : sessions) {
-            if (!s.isOpen()) continue;
+            if (!s.isOpen())
+                continue;
             s.sendMessage(new TextMessage(response));
         }
     }
@@ -94,38 +92,16 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
         switch (command) {
             case MOVE -> {
                 MoveMessage message = new ObjectMapper().readValue(body, MoveMessage.class);
-                gameController.moveUnit(message.id, message.posX, message.posY, message.gameId);
+                gameController.moveUnit(message.id(), message.posX(), message.posY(), message.gameId());
             }
             case ATTACK -> {
                 AttackMessage message = new ObjectMapper().readValue(body, AttackMessage.class);
-                gameController.attackUnit(message.attackerId, message.defenderId, message.gameId);
+                gameController.attackUnit(message.attackerId(), message.defenderId(), message.gameId());
             }
             case CREATE -> {
                 CreateMessage message = new ObjectMapper().readValue(body, CreateMessage.class);
-                gameController.createUnit(message.type, message.posX, message.posY, message.player);
+                gameController.createUnit(message.type(), message.posX(), message.posY(), message.player());
             }
         }
-    }
-
-    /**
-     * Record that will contain all information about unit to move.
-     *
-     * @param id   Unit ID.
-     * @param posX Desired X coordinate to move unit toward.
-     * @param posY Desired Y coordinate to move unit toward.
-     */
-    public record MoveMessage(Long id, double posX, double posY, String gameId) {
-    }
-
-    /**
-     * Record that will contain all information about units to fight.
-     *
-     * @param attackerId ID of attacker Unit.
-     * @param defenderId ID of defender Unit.
-     */
-    public record AttackMessage(Long attackerId, Long defenderId, String gameId) {
-    }
-
-    public record CreateMessage(UnitType type, double posX, double posY, Player player, String gameId) {
     }
 }

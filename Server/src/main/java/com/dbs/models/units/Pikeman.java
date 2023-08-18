@@ -1,8 +1,5 @@
 package com.dbs.models.units;
 
-/**
- * Class that represents Pikeman unit.
- */
 public class Pikeman extends Unit {
 
     public Pikeman() {

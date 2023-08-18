@@ -1,8 +1,5 @@
 package com.dbs.models.units;
 
-/**
- * Class that represents Heavy Footman unit.
- */
 public class HeavyFootman extends Unit {
 
     public HeavyFootman() {

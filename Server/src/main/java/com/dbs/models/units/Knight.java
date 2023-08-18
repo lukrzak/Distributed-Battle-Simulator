@@ -1,8 +1,5 @@
 package com.dbs.models.units;
 
-/**
- * Class that represents Knight unit.
- */
 public class Knight extends Unit {
 
     public Knight() {

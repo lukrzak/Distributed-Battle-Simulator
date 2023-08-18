@@ -2,16 +2,12 @@ package com.dbs.models.terrains;
 
 import com.dbs.enumerations.TerrainType;
 
-/**
- * TerrainFactory returns new instances of Terrain type.
- * Desired terrain must be passed as parameter of TerrainEnum type in static createTerrain(TerrainEnum type) method.
- */
 public class TerrainFactory {
 
     /**
      * Returns new instance of Terrain type object.
      *
-     * @param type definied by TerrainEnum
+     * @param type defined by TerrainEnum
      * @return new instance of Terrain type
      */
     public static Terrain createTerrain(TerrainType type) {

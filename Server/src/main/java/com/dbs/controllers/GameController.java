@@ -8,9 +8,6 @@ import org.springframework.stereotype.Controller;
 
 import java.util.Optional;
 
-/**
- * GameController is WebSocket controller, that receives and manages incoming messages.
- */
 @Controller
 public class GameController {
 
@@ -59,7 +56,7 @@ public class GameController {
      * @param type   Type of unit to create.
      * @param posX   X coordinate of unit creation position.
      * @param posY   Y coordinate of unit creation position.
-     * @param player Boolean type - true: playerA, false: playerB. In future player will be passed as byte variable.
+     * @param player Player who's creating unit
      */
     public void createUnit(UnitType type, double posX, double posY, Player player) {
         gameService.createUnit(type, posX, posY, player);

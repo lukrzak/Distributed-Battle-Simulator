@@ -4,14 +4,10 @@ import com.dbs.enumerations.UnitType;
 import com.dbs.models.Game;
 import com.dbs.models.Player;
 
-/**
- * UnitFactory returns new instances of Unit type.
- * Desired unit must be passed as parameter of UnitEnum type in static createUnit(UnitEnum type) method.
- */
 public class UnitFactory {
 
     /**
-     * Returns new instance of Unit type object.
+     * Returns new instance of Unit type object and assigns it to player.
      *
      * @param type defined by UnitEnum
      * @return new instance of Unit type
@@ -31,7 +27,7 @@ public class UnitFactory {
         newUnit.setPositionY(posY);
         newUnit.setPlayer(player);
         player.getUnits().add(newUnit);
-        
+
         return newUnit;
     }
 }

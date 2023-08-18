@@ -1,8 +1,5 @@
 package com.dbs.models.units;
 
-/**
- * Class that represents Archer unit.
- */
 public class Archer extends Unit {
 
     public Archer() {
