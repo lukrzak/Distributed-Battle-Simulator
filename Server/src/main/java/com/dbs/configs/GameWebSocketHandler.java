@@ -41,7 +41,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         super.afterConnectionEstablished(session);
         System.out.println("Connected");
-        gameController.initializeNewPlayer();
+        //gameController.initializeNewPlayer();
         sessions.add(session);
     }
 
@@ -94,11 +94,11 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
         switch (command) {
             case MOVE -> {
                 MoveMessage message = new ObjectMapper().readValue(body, MoveMessage.class);
-                gameController.moveUnit(message.id, message.posX, message.posY);
+                gameController.moveUnit(message.id, message.posX, message.posY, message.gameId);
             }
             case ATTACK -> {
                 AttackMessage message = new ObjectMapper().readValue(body, AttackMessage.class);
-                gameController.attackUnit(message.attackerId, message.defenderId);
+                gameController.attackUnit(message.attackerId, message.defenderId, message.gameId);
             }
             case CREATE -> {
                 CreateMessage message = new ObjectMapper().readValue(body, CreateMessage.class);
@@ -114,7 +114,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
      * @param posX Desired X coordinate to move unit toward.
      * @param posY Desired Y coordinate to move unit toward.
      */
-    public record MoveMessage(Long id, double posX, double posY) {
+    public record MoveMessage(Long id, double posX, double posY, String gameId) {
     }
 
     /**
@@ -123,9 +123,9 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
      * @param attackerId ID of attacker Unit.
      * @param defenderId ID of defender Unit.
      */
-    public record AttackMessage(Long attackerId, Long defenderId) {
+    public record AttackMessage(Long attackerId, Long defenderId, String gameId) {
     }
 
-    public record CreateMessage(UnitType type, double posX, double posY, Player player) {
+    public record CreateMessage(UnitType type, double posX, double posY, Player player, String gameId) {
     }
 }

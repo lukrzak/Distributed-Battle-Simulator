@@ -2,101 +2,67 @@ package com.dbs.services;
 
 import com.dbs.enumerations.CommandType;
 import com.dbs.enumerations.UnitType;
-import com.dbs.exceptions.TooManyConnectionsException;
 import com.dbs.models.Game;
 import com.dbs.models.Player;
 import com.dbs.models.units.Unit;
-import com.dbs.models.units.UnitFactory;
 import com.dbs.utils.UnitControlUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-
-import static java.lang.Math.pow;
-import static java.lang.Math.sqrt;
+import java.util.Optional;
 
 @Service
 public class GameService {
 
     private final Logger LOGGER = LoggerFactory.getLogger(GameService.class);
-    private final UnitService unitService;
-    private final Game game;
+    private final Map<String, Game> games = new HashMap<>();
 
-    public GameService(UnitService unitService, Game game) {
-        this.unitService = unitService;
-        this.game = game;
-    }
-
-    public void moveUnit(Unit unit, Double newX, Double newY) throws InterruptedException {
+    public void moveUnit(Unit unit, Double newX, Double newY) {
         Runnable moveTask = () -> {
             try {
                 UnitControlUtil.moveUnit(unit, newX, newY);
             } catch (InterruptedException e) {
-                System.out.println("Direction change");
+                LOGGER.debug("Changed movement direction of " + unit + " to " + newX + "," + newY);
             }
         };
         assignAndRunTask(unit, moveTask, CommandType.MOVE);
     }
 
-
-    public void attackUnit(Long attackerId, Long defenderId) throws InterruptedException {
-        Unit attacker;
-        Unit defender;
-        double damage;
-        synchronized (this) {
-            attacker = getUnitOfGivenId(attackerId);
-            defender = getUnitOfGivenId(defenderId);
-            if (attacker == null || defender == null)
-                return;
-
-            double distance = sqrt(pow(attacker.getPositionX() - defender.getPositionX(), 2)
-                    + pow(attacker.getPositionY() - defender.getPositionY(), 2));
-            if (distance > attacker.getRange()) {
-                System.out.println("Out of range");
-                return;
+    public void attackUnit(Unit attacker, Unit defender) {
+        Runnable attackTask = () -> {
+            try {
+                UnitControlUtil.attackUnit(attacker, defender);
+            } catch (Exception e) {
+                LOGGER.debug(attacker + " changed attack target to" + defender);
             }
-            double damageFactor = unitService.getCounterFactor(attacker.getClass(), defender.getClass());
-
-            damage = attacker.getDamage() * damageFactor;
-            defender.setHealth(defender.getHealth() - damage);
-            if (defender.getHealth() <= 0)
-                killUnit(defender);
-        }
-        LOGGER.debug(attacker.getName() + " attacked " + defender.getName() + " for " + damage + " damage");
-        LOGGER.debug("Defender " + defender.getName() + " has now " + defender.getHealth() + " health");
-
-        Thread.sleep(500);
-        attackUnit(attackerId, defenderId);
+        };
+        assignAndRunTask(attacker, attackTask, CommandType.ATTACK);
     }
 
-    public Unit getUnitOfGivenId(Long id) {
-        List<Unit> allUnits = game.getPlayers().stream()
+    public void createUnit(UnitType type, double posX, double posY, Player player) {
+        Thread createUnitThread = new Thread(() -> {
+            try {
+                UnitControlUtil.createNewUnit(type, posX, posY, player);
+            } catch (InterruptedException e) {
+                LOGGER.debug("Unit creating interrupted");
+            }
+        });
+        createUnitThread.start();
+    }
+
+    public Optional<Unit> getUnitOfGivenId(Long unitId, String gameId) {
+        List<Unit> allUnits = games.get(gameId).getPlayers().stream()
                 .flatMap(player -> player.getUnits().stream())
                 .toList();
         for (Unit unit : allUnits)
-            if (Objects.equals(unit.getId(), id))
-                return unit;
-        return null;
-    }
-
-    public void createUnit(UnitType type, double posX, double posY, Player player) throws InterruptedException {
-        Thread.sleep(2500);
-        Unit newUnit = UnitFactory.createUnit(type, posX, posY, player);
-        player.getUnits().add(newUnit);
-    }
-
-    public void killUnit(Unit unit) {
-        LOGGER.debug(unit.getName() + " has been defeated");
-        unit.getPlayer().getUnits().remove(unit);
-    }
-
-    public void initializeNewPlayer() throws TooManyConnectionsException {
-        if (game.getPlayers().size() > 3)
-            throw new TooManyConnectionsException();
-        game.getPlayers().add(new Player());
+            if (Objects.equals(unit.getId(), unitId))
+                return Optional.of(unit);
+        return Optional.empty();
     }
 
     private void assignAndRunTask(Unit unitToMove, Runnable task, CommandType command) {

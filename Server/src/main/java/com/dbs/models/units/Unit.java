@@ -33,4 +33,9 @@ public abstract class Unit {
         this.health = health;
         this.cost = cost;
     }
+
+    @Override
+    public String toString() {
+        return name + ":" + id;
+    }
 }

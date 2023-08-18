@@ -30,7 +30,8 @@ public class UnitFactory {
         newUnit.setPositionX(posX);
         newUnit.setPositionY(posY);
         newUnit.setPlayer(player);
-
+        player.getUnits().add(newUnit);
+        
         return newUnit;
     }
 }
