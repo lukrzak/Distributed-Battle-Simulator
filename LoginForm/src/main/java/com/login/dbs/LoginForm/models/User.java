@@ -15,7 +15,7 @@ import java.util.Collection;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity(name = "users")
+@Entity
 public class User implements UserDetails {
 
     @Id
@@ -23,12 +23,12 @@ public class User implements UserDetails {
     private Long id;
     private String username;
     private String password;
-    private String mail;
+    private String email;
 
-    public User(String username, String password, String mail) {
+    public User(String username, String password, String email) {
         this.username = username;
         this.password = password;
-        this.mail = mail;
+        this.email = email;
     }
 
     @Override
@@ -64,5 +64,10 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return username + ":" + email;
     }
 }
