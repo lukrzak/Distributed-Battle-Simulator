@@ -10,10 +10,12 @@ import com.login.dbs.LoginForm.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import javax.naming.AuthenticationException;
 import java.io.IOException;
@@ -29,6 +31,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
     private final JavaMailSender mailSender;
+    private final String PASSWORD_CREATOR_URL = "https://makemeapassword.ligos.net/api/v1/alphanumeric/json?l=16";
 
     @Value("${config.email.login}")
     private String emailUsername;
@@ -111,13 +114,10 @@ public class UserService {
     }
 
     private String getGeneratedPassword() throws IOException {
-        URL url = new URL("https://makemeapassword.ligos.net/api/v1/alphanumeric/json?l=16");
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestProperty("accept", "application/json");
-        connection.setRequestMethod("GET");
-        InputStream responseStream = connection.getInputStream();
+        RestTemplate restTemplate = new RestTemplate();
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode root = mapper.readTree(responseStream);
+        ResponseEntity<String> response = restTemplate.getForEntity(PASSWORD_CREATOR_URL, String.class);
+        JsonNode root = mapper.readTree(response.getBody());
 
         return root.path("pws").get(0).toString().replace("\"", "");
     }
