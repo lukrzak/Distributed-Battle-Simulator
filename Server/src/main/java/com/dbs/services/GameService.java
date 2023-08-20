@@ -21,7 +21,6 @@ import java.util.Optional;
 public class GameService {
 
     private final Logger LOGGER = LoggerFactory.getLogger(GameService.class);
-
     @Getter
     private final Map<String, Game> games = new HashMap<>();
 

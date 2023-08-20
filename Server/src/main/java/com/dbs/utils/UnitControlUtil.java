@@ -13,6 +13,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.HashMap;
 
@@ -25,6 +26,8 @@ public class UnitControlUtil {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(UnitControlUtil.class);
     private final static HashMap<Pair<Class<? extends Unit>, Class<? extends Unit>>, Double> counterDamageFactor = new HashMap<>();
+    @Value("${game.config.createUnitTime}")
+    private static long createUnitTime;
 
     public UnitControlUtil() {
         counterDamageFactor.put(new ImmutablePair<>(Pikeman.class, Knight.class), 1.5);
@@ -82,7 +85,7 @@ public class UnitControlUtil {
     public static Unit createNewUnit(UnitType type, double posX, double posY, Player player) throws InterruptedException {
         Unit unit;
         synchronized (player.getUnits()) {
-            Thread.sleep(1500);
+            Thread.sleep(createUnitTime);
             unit = UnitFactory.createUnit(type, posX, posY, player);
         }
         LOGGER.debug("Created unit " + unit);

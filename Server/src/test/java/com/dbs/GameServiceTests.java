@@ -9,6 +9,7 @@ import com.dbs.models.units.UnitFactory;
 import com.dbs.services.GameService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Optional;
 
@@ -18,7 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GameServiceTests {
 
-    // TODO Replace Thread.sleep(1) with listener
+    @Value("game.config.createUnitTime")
+    private long createUnitTime;
     private GameService gameService = new GameService();
     private Game game;
     private Unit u1;
@@ -119,13 +121,14 @@ class GameServiceTests {
 
     @Test
     void testCreatingUnits() throws InterruptedException {
+        final int ACCEPTED_DELAY = 500;
         int player1NumberOfUnits = p1.getUnits().size();
         int player2NumberOfUnits = p2.getUnits().size();
 
         gameService.createUnit(UnitType.ARCHER, 1.0, 1.0, p1);
         gameService.createUnit(UnitType.ARCHER, 1.0, 1.0, p2);
         gameService.createUnit(UnitType.ARCHER, 1.0, 1.0, p1);
-        Thread.sleep(3500);
+        Thread.sleep(createUnitTime * 2 + ACCEPTED_DELAY);
 
         assertEquals(player1NumberOfUnits + 2, p1.getUnits().size());
         assertEquals(player2NumberOfUnits + 1, p2.getUnits().size());

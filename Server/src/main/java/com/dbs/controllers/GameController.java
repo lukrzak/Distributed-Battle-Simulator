@@ -9,7 +9,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 
 import java.util.Optional;
-import java.util.logging.Logger;
 
 @Controller
 @Log4j2
@@ -61,7 +60,7 @@ public class GameController {
     }
 
     /**
-     * Method creates new unit of given type at given coordinates for player after 2500ms.
+     * Method creates new unit of given type at given coordinates for player.
      *
      * @param type   Type of unit to create.
      * @param posX   X coordinate of unit creation position.
