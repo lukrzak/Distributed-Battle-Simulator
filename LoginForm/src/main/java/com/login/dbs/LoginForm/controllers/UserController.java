@@ -53,7 +53,7 @@ public class UserController {
     public ResponseEntity<String> recoverPassword(@RequestBody String email) {
         try {
             userService.recoverPassword(email);
-        } catch (IOException e) {
+        } catch (IOException | AuthenticationException e) {
             return new ResponseEntity<>("Email doesn't exist", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("New password has been generated - check your email", HttpStatus.OK);
