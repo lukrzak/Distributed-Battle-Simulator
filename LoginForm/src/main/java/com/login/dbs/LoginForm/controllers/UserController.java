@@ -3,6 +3,7 @@ package com.login.dbs.LoginForm.controllers;
 import com.login.dbs.LoginForm.dtos.BasicUserInfoDto;
 import com.login.dbs.LoginForm.dtos.ChangeUserPasswordDto;
 import com.login.dbs.LoginForm.exceptions.UserAlreadyExistException;
+import com.login.dbs.LoginForm.models.User;
 import com.login.dbs.LoginForm.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,13 +26,9 @@ public class UserController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<String> registerUser(@RequestBody BasicUserInfoDto userToCreate) {
-        try {
-            userService.registerUser(userToCreate);
-        } catch (UserAlreadyExistException e) {
-            return new ResponseEntity<>("User with given email or username already exist", HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>("User " + userToCreate.username() + " created successfully", HttpStatus.OK);
+    public ResponseEntity<String> registerUser(@RequestBody BasicUserInfoDto userToCreate) throws UserAlreadyExistException {
+        User createdUser = userService.registerUser(userToCreate);
+        return new ResponseEntity<>("User " + createdUser + " created successfully", HttpStatus.OK);
     }
 
     @PostMapping("/authentication")
@@ -40,22 +37,14 @@ public class UserController {
     }
 
     @PostMapping("/password")
-    public ResponseEntity<String> changePassword(@RequestBody ChangeUserPasswordDto changeUserPasswordDto) {
-        try {
-            userService.changePassword(changeUserPasswordDto);
-        } catch (AuthenticationException e) {
-            return new ResponseEntity<>("Password is incorrect", HttpStatus.UNAUTHORIZED);
-        }
-        return new ResponseEntity<>("Password has been changed", HttpStatus.OK);
+    public ResponseEntity<String> changePassword(@RequestBody ChangeUserPasswordDto changeUserPasswordDto) throws AuthenticationException {
+        User userWithChangedPassword = userService.changePassword(changeUserPasswordDto);
+        return new ResponseEntity<>("Password for " + userWithChangedPassword + " has been changed", HttpStatus.OK);
     }
 
     @PostMapping("/password/recovery")
-    public ResponseEntity<String> recoverPassword(@RequestBody String email) {
-        try {
-            userService.recoverPassword(email);
-        } catch (IOException | AuthenticationException e) {
-            return new ResponseEntity<>("Email doesn't exist", HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>("New password has been generated - check your email", HttpStatus.OK);
+    public ResponseEntity<String> recoverPassword(@RequestBody String email) throws AuthenticationException, IOException {
+        User userWithRecoveredPassword = userService.recoverPassword(email);
+        return new ResponseEntity<>("New password has been generated for " + userWithRecoveredPassword + " - check your email", HttpStatus.OK);
     }
 }
