@@ -5,13 +5,9 @@ import com.dbs.models.Game;
 import com.dbs.models.Player;
 import com.dbs.models.units.Unit;
 import com.dbs.services.GameService;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 
-import java.util.Optional;
-
 @Controller
-@Log4j2
 public class GameController {
 
     private final GameService gameService;
@@ -29,14 +25,12 @@ public class GameController {
      * @param posY   Y coordinate of destination.
      */
     public void moveUnit(Long unitId, double posX, double posY, String gameId) {
-        Game game = gameService.getGames().get(gameId);
-        if (game == null)
-            throw new NullPointerException("Game with given id doesn't exist");
-        Optional<Unit> unit = gameService.getUnitOfGivenId(unitId, game);
-        if (unit.isEmpty())
-            throw new NullPointerException("Unit with id " + unitId + " doesn't exist");
+        Game game = gameService.findGameById(gameId)
+                .orElseThrow(() -> new NullPointerException("Game with given id doesn't exist"));
+        Unit unit = gameService.getUnitOfGivenId(unitId, game)
+                .orElseThrow(() -> new NullPointerException("Unit with id " + unitId + " doesn't exist"));
 
-        gameService.moveUnit(unit.get(), posX, posY);
+        gameService.moveUnit(unit, posX, posY);
     }
 
     /**
@@ -48,15 +42,14 @@ public class GameController {
      * @param defenderId ID of unit. This unit will receive dealt damage.
      */
     public void attackUnit(Long attackerId, Long defenderId, String gameId) {
-        Game game = gameService.getGames().get(gameId);
-        if (game == null)
-            throw new NullPointerException("Game with given id doesn't exist");
-        Optional<Unit> attacker = gameService.getUnitOfGivenId(attackerId, game);
-        Optional<Unit> defender = gameService.getUnitOfGivenId(defenderId, game);
-        if (attacker.isEmpty() || defender.isEmpty())
-            throw new NullPointerException("Unit with id " + attackerId + " or " + defenderId + " doesn't exist");
+        Game game = gameService.findGameById(gameId)
+                .orElseThrow(() -> new NullPointerException("Game with given id doesn't exist"));
+        Unit attacker = gameService.getUnitOfGivenId(attackerId, game)
+                .orElseThrow(() -> new NullPointerException("Unit with id " + attackerId + " doesn't exist"));
+        Unit defender = gameService.getUnitOfGivenId(defenderId, game)
+                .orElseThrow(() -> new NullPointerException("Unit with id " + defenderId + " doesn't exist"));
 
-        gameService.attackUnit(attacker.get(), defender.get());
+        gameService.attackUnit(attacker, defender);
     }
 
     /**

@@ -6,7 +6,6 @@ import com.dbs.models.Game;
 import com.dbs.models.Player;
 import com.dbs.models.units.Unit;
 import com.dbs.utils.UnitControlUtil;
-import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,6 @@ import java.util.Optional;
 public class GameService {
 
     private final Logger LOGGER = LoggerFactory.getLogger(GameService.class);
-    @Getter
     private final Map<String, Game> games = new HashMap<>();
 
     public void moveUnit(Unit unit, Double newX, Double newY) {
@@ -65,6 +63,13 @@ public class GameService {
             if (Objects.equals(unit.getId(), unitId))
                 return Optional.of(unit);
         return Optional.empty();
+    }
+
+    public Optional<Game> findGameById(String gameId) {
+        Game game = games.get(gameId);
+
+        if (game == null) return Optional.empty();
+        return Optional.of(game);
     }
 
     private void assignAndRunTask(Unit unitToMove, Runnable task, CommandType command) {
