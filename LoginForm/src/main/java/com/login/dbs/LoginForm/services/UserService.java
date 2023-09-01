@@ -28,7 +28,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
     //private final JavaMailSender mailSender;
-    private final String PASSWORD_CREATOR_URL = "https://makemeapassword.ligos.net/api/v1/alphanumeric/json?l=16";
+    private final String PASSWORD_LENGTH_PARAM = "16";
+    private final String PASSWORD_CREATOR_URL = "https://makemeapassword.ligos.net/api/v1/alphanumeric/json?l=" + PASSWORD_LENGTH_PARAM;
 
     @Value("${config.email.login}")
     private String emailUsername;
