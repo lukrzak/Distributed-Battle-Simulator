@@ -12,16 +12,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+//import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.naming.AuthenticationException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Optional;
 
 @Service
@@ -30,16 +27,15 @@ public class UserService {
     private final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
-    private final JavaMailSender mailSender;
+    //private final JavaMailSender mailSender;
     private final String PASSWORD_CREATOR_URL = "https://makemeapassword.ligos.net/api/v1/alphanumeric/json?l=16";
 
     @Value("${config.email.login}")
     private String emailUsername;
 
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder encoder, JavaMailSender mailSender) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder encoder) {
         this.userRepository = userRepository;
         this.encoder = encoder;
-        this.mailSender = mailSender;
     }
 
     public User registerUser(BasicUserInfoDto userToCreate) throws UserAlreadyExistException {
@@ -49,9 +45,8 @@ public class UserService {
 
         String encodedPassword = encoder.encode(userToCreate.password());
         User newUser = new User(userToCreate.username(), encodedPassword, userToCreate.email());
-        LOGGER.debug("Created user: " + newUser);
-
         userRepository.save(newUser);
+
         return newUser;
     }
 
@@ -63,39 +58,33 @@ public class UserService {
     }
 
     public User changePassword(ChangeUserPasswordDto changeUserPasswordDto) throws AuthenticationException {
-        Optional<User> userToBeChanged = userRepository.findByEmail(changeUserPasswordDto.email());
-        if (userToBeChanged.isEmpty()) {
-            LOGGER.debug("User " + changeUserPasswordDto.email() + " doesn't exist");
-            throw new AuthenticationException("User with given email doesn't exist");
-        }
+        User userToBeChanged = userRepository.findByEmail(changeUserPasswordDto.email())
+                .orElseThrow(() -> new AuthenticationException("User with given email doesn't exist"));
         BasicUserInfoDto user = new BasicUserInfoDto(
-                userToBeChanged.get().getUsername(), changeUserPasswordDto.password(), userToBeChanged.get().getEmail());
+                userToBeChanged.getUsername(), changeUserPasswordDto.password(), userToBeChanged.getEmail());
 
         if (authenticateUser(user)) {
-            userToBeChanged.get().setPassword(encoder.encode(changeUserPasswordDto.newPassword()));
-            userRepository.save(userToBeChanged.get());
+            userToBeChanged.setPassword(encoder.encode(changeUserPasswordDto.newPassword()));
+            userRepository.save(userToBeChanged);
             LOGGER.debug("New password for user " + user + " has been saved");
-        } else throw new AuthenticationException("Failed to authenticate");
+        } else throw new AuthenticationException("Failed to authenticate " + userToBeChanged);
 
-        return userToBeChanged.get();
+        return userToBeChanged;
     }
 
     public User recoverPassword(String email) throws IOException, AuthenticationException {
-        Optional<User> user = userRepository.findByEmail(email);
-        if (user.isEmpty()) {
-            LOGGER.debug("User with email " + email + " doesn't exist");
-            throw new AuthenticationException("User with given email doesn't exist");
-        }
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AuthenticationException("User with given email doesn't exist"));
         String generatedPassword = getGeneratedPassword();
-        user.get().setPassword(encoder.encode(generatedPassword));
-        userRepository.save(user.get());
+        user.setPassword(encoder.encode(generatedPassword));
+        userRepository.save(user);
 
         String text =
                 "Your recovery password:\n" + generatedPassword +
                         "\nPlease change your password immediately after logging in";
         sendEmail(email, "Password Recovery", text);
 
-        return user.get();
+        return user;
     }
 
     private boolean checkIfEncodedPasswordsMatch(String providedPassword, String expectedPassword) {
@@ -109,7 +98,7 @@ public class UserService {
         mail.setText(text);
         mail.setSubject(title);
 
-        mailSender.send(mail);
+        //mailSender.send(mail);
         LOGGER.info("Recovery email sent to " + receiver);
     }
 
