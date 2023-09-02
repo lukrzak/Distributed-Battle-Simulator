@@ -1,6 +1,8 @@
 package com.dbs.controllers;
 
 import com.dbs.enumerations.UnitType;
+import com.dbs.exceptions.GameNotFoundException;
+import com.dbs.exceptions.UnitNotFoundException;
 import com.dbs.models.Game;
 import com.dbs.models.Player;
 import com.dbs.models.units.Unit;
@@ -26,9 +28,9 @@ public class GameController {
      */
     public void moveUnit(Long unitId, double posX, double posY, String gameId) {
         Game game = gameService.findGameById(gameId)
-                .orElseThrow(() -> new NullPointerException("Game with given id doesn't exist"));
+                .orElseThrow(() -> new GameNotFoundException(gameId));
         Unit unit = gameService.getUnitOfGivenId(unitId, game)
-                .orElseThrow(() -> new NullPointerException("Unit with id " + unitId + " doesn't exist"));
+                .orElseThrow(() -> new UnitNotFoundException(unitId));
 
         gameService.moveUnit(unit, posX, posY);
     }
@@ -43,11 +45,11 @@ public class GameController {
      */
     public void attackUnit(Long attackerId, Long defenderId, String gameId) {
         Game game = gameService.findGameById(gameId)
-                .orElseThrow(() -> new NullPointerException("Game with given id doesn't exist"));
+                .orElseThrow(() -> new GameNotFoundException(gameId));
         Unit attacker = gameService.getUnitOfGivenId(attackerId, game)
-                .orElseThrow(() -> new NullPointerException("Unit with id " + attackerId + " doesn't exist"));
+                .orElseThrow(() -> new UnitNotFoundException(attackerId));
         Unit defender = gameService.getUnitOfGivenId(defenderId, game)
-                .orElseThrow(() -> new NullPointerException("Unit with id " + defenderId + " doesn't exist"));
+                .orElseThrow(() -> new UnitNotFoundException(defenderId));
 
         gameService.attackUnit(attacker, defender);
     }
