@@ -2,6 +2,8 @@ package com.dbs;
 
 import com.dbs.controllers.GameController;
 import com.dbs.enumerations.UnitType;
+import com.dbs.exceptions.GameNotFoundException;
+import com.dbs.exceptions.UnitNotFoundException;
 import com.dbs.models.Game;
 import com.dbs.models.Player;
 import com.dbs.models.units.Unit;
@@ -65,8 +67,8 @@ class GameControllerTests {
 
     @Test
     void testMovingUnitWithInvalidData() {
-        assertThrows(NullPointerException.class, () -> gameController.moveUnit(1L, 5.0, 5.0, "BAD"));
-        assertThrows(NullPointerException.class, () -> gameController.moveUnit(3L, 5.0, 5.0, "AAA"));
+        assertThrows(GameNotFoundException.class, () -> gameController.moveUnit(1L, 5.0, 5.0, "BAD"));
+        assertThrows(UnitNotFoundException.class, () -> gameController.moveUnit(3L, 5.0, 5.0, "AAA"));
     }
 
     @Test
@@ -83,9 +85,9 @@ class GameControllerTests {
 
     @Test
     void testAttackingWithInvalidData() {
-        assertThrows(NullPointerException.class, () -> gameController.attackUnit(1L, 2L, "BAD"));
-        assertThrows(NullPointerException.class, () -> gameController.attackUnit(3L, 2L, "AAA"));
-        assertThrows(NullPointerException.class, () -> gameController.attackUnit(1L, 3L, "AAA"));
+        assertThrows(GameNotFoundException.class, () -> gameController.attackUnit(1L, 2L, "BAD"));
+        assertThrows(UnitNotFoundException.class, () -> gameController.attackUnit(3L, 2L, "AAA"));
+        assertThrows(UnitNotFoundException.class, () -> gameController.attackUnit(1L, 3L, "AAA"));
     }
 
     @Test
