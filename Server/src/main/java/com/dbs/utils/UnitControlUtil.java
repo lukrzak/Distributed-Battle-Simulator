@@ -28,6 +28,7 @@ public class UnitControlUtil {
     private final static HashMap<Pair<Class<? extends Unit>, Class<? extends Unit>>, Double> counterDamageFactor = new HashMap<>();
     @Value("${game.config.createUnitTime}")
     private static long createUnitTime;
+    private final static Object lock = new Object();
 
     public UnitControlUtil() {
         counterDamageFactor.put(new ImmutablePair<>(Pikeman.class, Knight.class), 1.5);
@@ -60,7 +61,7 @@ public class UnitControlUtil {
 
     public static void attackUnit(Unit attacker, Unit defender) throws InterruptedException {
         validateUnitsAttack(attacker, defender);
-        synchronized (defender.getPlayer().getUnits()) {
+        synchronized (lock) {
             double distance = sqrt(pow(attacker.getPositionX() - defender.getPositionX(), 2)
                     + pow(attacker.getPositionY() - defender.getPositionY(), 2));
             if (distance > attacker.getRange()) {
@@ -84,7 +85,7 @@ public class UnitControlUtil {
 
     public static Unit createNewUnit(UnitType type, double posX, double posY, Player player) throws InterruptedException {
         Unit unit;
-        synchronized (player.getUnits()) {
+        synchronized (lock) {
             Thread.sleep(createUnitTime);
             unit = UnitFactory.createUnit(type, posX, posY, player);
         }

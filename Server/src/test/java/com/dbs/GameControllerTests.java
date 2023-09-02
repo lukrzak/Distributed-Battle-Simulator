@@ -10,7 +10,6 @@ import com.dbs.services.GameService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,10 +41,9 @@ class GameControllerTests {
         game = new Game();
         game.getPlayers().add(p1);
         game.getPlayers().add(p2);
-        Map<String, Game> games = Map.of("AAA", game);
         u1 = UnitFactory.createUnit(UnitType.KNIGHT, 1.0, 1.0, p1);
         u2 = UnitFactory.createUnit(UnitType.ARCHER, 1.0, 1.0, p2);
-        when(gameService.getGames()).thenReturn(games);
+        when(gameService.findGameById(eq("AAA"))).thenReturn(Optional.of(game));
         when(gameService.getUnitOfGivenId(eq(1L), any())).thenReturn(Optional.of(u1));
         when(gameService.getUnitOfGivenId(eq(2L), any())).thenReturn(Optional.of(u2));
         doCallRealMethod().when(gameService).moveUnit(any(), any(), any());
